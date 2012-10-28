@@ -1,10 +1,29 @@
 <?php
 
+	function drawLoginStatus()
+	{
+	 echo "<div id='header'> Welcome ". $_SESSION['connected']."<div>";	
+	}
+	function drawButton($name, $value, $target)
+	{
+	 echo "<div> <form method='POST' action='".$target."'>
+			<input type='submit' name='".$name."' value ='".$value."' />
+		</form></div>";
+	}
+	function pullFriendList()
+	{
+		$conn = connect();
+		$handle = $_SESSION['connected'];
+		$query = "SELECT * FROM friends WHERE handle1='$handle'";
+		$result = mysql_query($query);
+		while ($row = mysql_fetch_array($result))
+		{
+			echo "<tr><td>". $row['handle2']. "</td></tr>";
+		}
+	}
 	function drawLogout()
 	{
-		echo "<div> <form method='POST' action='login.php'>
-			<input type='submit' name='logout' value='Log Out'/>
-			</form></div>";
+		drawButton("logout", "Log Out", "login.php");
 	}
 	function sessionCheck()
 	{
@@ -21,6 +40,7 @@
 		{
 			die("Could not connect to database". mysql_error());
 		}
+		mysql_select_db("connect", $conn);
 		return $conn;
 	}
 
@@ -69,7 +89,6 @@
 		$email = $vals['email'];
 		if (sanityCheck()) 
 		{
-			mysql_select_db("connect", $conn);
 			$query = "INSERT INTO users (Handle,FName,LName,Password,EMail)
 			VALUES ('$handle','$fname','$lname','$password','$email')";
 			if (!mysql_query($query, $conn))
@@ -132,7 +151,6 @@ function login($conn, $vals)
 			{	
 				if ($row['Password']==$password)
 				{
-					echo "Logged In As " . $row['FName']. " ". $row['LName'];
 					onLoginSuccess($handle);
 				}
 				else

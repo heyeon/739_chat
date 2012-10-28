@@ -69,6 +69,52 @@ if(!sessionCheck()){
 <?php
 }
 else
-drawLogout();
+{
+drawLoginStatus();
 ?>
+<div id="chat">
+<table border="1" width="100%" height="80%">
+<tr>
+<td height="70%" width="75%">
+<div id="chatArea">
+<textarea rows="15" cols="100" name="chatBox" readonly="readonly">
+Chat Area
+</textarea> 
+</div>
+</td>
+<td height="70%" width="75%"	>
+<div id="frindList">
+
+<table name="friendList">
+<tr>
+<th> Friend List </th	>
+</tr>
+<?php pullFriendList(); ?>
+</table>
+</div>
+</td>
+</tr>
+<tr width="100%">
+<td >
+<div id="chatInput">
+<textarea rows="5" cols="100" name="chatInputArea" onFocus="">
+Enter Your Text Here
+</textarea> 
+</div>
+</td>
+</tr>
+<tr >
+<td align="right">
+<?php 
+drawLogout(); 
+drawButton("submitChat", "Enter", "index.php");
+?>
+</td>
+</tr>
+</table>
+</div>
+
+<?php 
+
+} ?>
 </html>
