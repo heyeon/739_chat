@@ -1,25 +1,33 @@
 <?php
-
+	include ("server_conn.php");
+	
 	function drawLoginStatus()
 	{
-	 echo "<div id='header'> Welcome ". $_SESSION['connected']."<div>";	
+		echo "<div id='header'> Welcome ". $_SESSION['connected']."<div>";	
 	}
+	
 	function drawButton($name, $value, $target)
 	{
 	 echo "<div> <form method='POST' action='".$target."'>
 			<input type='submit' name='".$name."' value ='".$value."' />
 		</form></div>";
 	}
+	
 	function pullFriendList()
 	{
 		$conn = connect();
 		$handle = $_SESSION['connected'];
-		$query = "SELECT * FROM friends WHERE handle1='$handle'";
+		$query = "SELECT * FROM users";
+		mysql_select_db($GLOBALS['db'], $conn);
 		$result = mysql_query($query);
+		
 		while ($row = mysql_fetch_array($result))
 		{
-			echo "<tr><td>". $row['handle2']. "</td></tr>";
+			echo $row;
+			echo "test";
+			echo "<tr><td>". $row['Handle']. "</td></tr>";
 		}
+		disconnect($conn);
 	}
 	function drawLogout()
 	{
@@ -33,17 +41,18 @@
 		}
 		return true;
 	}
-	function connect()
+	
+	
+	function onNewConnections()
 	{
-		$conn = mysql_connect("localhost", "root");
-		if (!$conn)
-		{
-			die("Could not connect to database". mysql_error());
-		}
-		mysql_select_db("connect", $conn);
-		return $conn;
+		$conn = connect();
+		mysql_select_db($db, $conn);
+		$tableName = $tables["load"];
+		$query = "UPDATE '$tableName' SET NumConns = NumConns + 1 WHERE ServerIP = '$localIP'";
+		mysql_query($query);
+		disconnect($conn);
 	}
-
+	
 	function disconnect($conn)
 	{
 		if ($conn)
@@ -59,23 +68,48 @@
 			$_SESSION['connected'] = $handle;
 		}
 		echo $_SESSION['connected'];
-		updateLoginStatus(connect(),1,$handle);
+		updateLoginStatus(1,$handle);
+		onNewConnections();
+		header("Location: index.php");
 	}
 
-	function onLogOut()
+	function onLogOutSuccess()
 	{
-		updateLoginStatus(connect(),0,$_SESSION['connected']);
+		updateLoginStatus(0,$_SESSION['connected']);
+		onDisconnect($val);
 		session_destroy();
 		
 	}
 	
+	function onDisconnect()
+	{
+		$conn = connect();
+		mysql_select_db($db, $conn);
+		$tableName = $tables["load"];
+		$query = "UPDATE '$tableName' SET NumConns = NumConns - 1 WHERE ServerIP = '$localIP'";
+		mysql_query($query);
+		disconnect($conn);
+	}
+	
+	function onNewMessage($handle, $message)
+	{
+		$tableName = $tables["messages"];
+		$query = "INSERT INTO '$tableName' (Handle,Message)	VALUES ('$handle','$message')";
+		$conn = connect();
+		$mysql_select_db($db,$conn);
+		$mysql_query($query);
+		disconnect($conn);
+	}
 	function sanityCheck() //stub function for now we will implement it later to verify user input
 	{
 		return true;
 	}
 	
-	function signup($conn, $vals)
-{
+	
+	
+	
+	function signup($conn, $vals)	
+	{
 	if (!$conn)
 	{
 		echo "Connection Error " . mysql_error();
@@ -89,13 +123,12 @@
 		$email = $vals['email'];
 		if (sanityCheck()) 
 		{
-			$query = "INSERT INTO users (Handle,FName,LName,Password,EMail)
+			$conn = connect();
+			$tableName = $tables["users"];
+			$query = "INSERT INTO '$tableName' (Handle,FName,LName,Password,EMail)
 			VALUES ('$handle','$fname','$lname','$password','$email')";
-			if (!mysql_query($query, $conn))
-			{
-				die('Die :'.mysql_error());
-				return false;
-			}
+			mysql_select_db($db,$conn);
+			mysql_query($query);
 			onLoginSuccess($handle);
 			echo "Signup Successful" ;
 			return true;
@@ -108,19 +141,15 @@
 	}
 }
 
-function updateLoginStatus($conn,$loginStatus,$handle)
-{
-	if (!$conn)
-	{
-		echo "Connection Error " . mysql_error();
-	}
-	else
-	{
-		mysql_select_db("connect", $conn);
-		$query = "UPDATE users SET IsConnected='$loginStatus' WHERE Handle='$handle'";
-		mysql_query($query);
-	}
-}
+		function updateLoginStatus($loginStatus,$handle)
+		{
+			$conn = connect();
+			mysql_select_db("connect", $conn);
+			$query = "UPDATE users SET IsConnected='$loginStatus' WHERE Handle='$handle'";
+			mysql_query($query);
+			disconnect();
+		}
+		
 function login($conn, $vals)
 {
 	if (!$conn)

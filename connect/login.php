@@ -8,8 +8,7 @@ if(isset($_POST['login']))
 	{
 		$conn = connect();
 		$result = login($conn,$_POST);
-		disconnect($conn);
-		header("Location: index.php");
+		
 	}
 	else
 	{
@@ -22,9 +21,13 @@ if(isset($_POST['login']))
 
 if (isset($_POST['logout']))
 {
-	onLogOut();
+	onLogOutSuccess();
 	header("Location: index.php");
+	return 0;
 }
+
+
+
 
 ?>
 
