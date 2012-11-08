@@ -71,6 +71,12 @@ if(!sessionCheck()){
 else
 {
 drawLoginStatus();
+if (isset($_POST['submitChat']))
+{
+	$text =  $_POST['chatInputArea'] ;
+	echo $text;
+	onNewMessage($_SESSION['connected'], $text);
+}
 ?>
 <div id="chat">
 <table border="1" width="100%" height="80%">
@@ -97,9 +103,12 @@ Chat Area
 <tr width="100%">
 <td >
 <div id="chatInput">
-<textarea rows="5" cols="100" name="chatInputArea" onFocus="">
-Enter Your Text Here
-</textarea> 
+<form id="chatBox" method="POST" action="index.php">
+	<input id="chatInputArea" name="chatInputArea"/>
+	<?php
+		drawButton("submitChat", "Enter", "index.php");
+	?>
+</form>
 </div>
 </td>
 </tr>
@@ -107,7 +116,6 @@ Enter Your Text Here
 <td align="right">
 <?php 
 drawLogout(); 
-drawButton("submitChat", "Enter", "index.php");
 ?>
 </td>
 </tr>

@@ -5,8 +5,6 @@ if (!sessionCheck())
 {
 	$conn = connect();
 	$result = signup($conn, $_POST);
-	disconnect($conn);
-	
 }
 else
 {	
