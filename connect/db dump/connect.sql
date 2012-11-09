@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.2.2
+-- version 3.4.5
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 04, 2012 at 01:24 AM
--- Server version: 5.5.27
--- PHP Version: 5.4.7
+-- Host: localhost
+-- Generation Time: Nov 09, 2012 at 01:58 AM
+-- Server version: 5.5.16
+-- PHP Version: 5.3.8
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -27,6 +27,8 @@ USE `connect`;
 --
 -- Table structure for table `friends`
 --
+-- Creation: Nov 05, 2012 at 04:46 AM
+--
 
 CREATE TABLE IF NOT EXISTS `friends` (
   `handle1` varchar(18) NOT NULL,
@@ -36,31 +38,12 @@ CREATE TABLE IF NOT EXISTS `friends` (
   KEY `handle1` (`handle1`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `friends`
---
-
-INSERT INTO `friends` (`handle1`, `handle2`, `messages`) VALUES
-('aa', 'ab', ''),
-('aa', 'borno', ''),
-('aa', 'borno2', '');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `loadinfo`
---
-
-CREATE TABLE IF NOT EXISTS `loadinfo` (
-  `ServerIP` int(11) NOT NULL,
-  `NumConns` int(11) NOT NULL,
-  PRIMARY KEY (`ServerIP`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `messages`
+--
+-- Creation: Nov 04, 2012 at 12:24 AM
 --
 
 CREATE TABLE IF NOT EXISTS `messages` (
@@ -73,6 +56,8 @@ CREATE TABLE IF NOT EXISTS `messages` (
 
 --
 -- Table structure for table `users`
+--
+-- Creation: Nov 04, 2012 at 12:24 AM
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
@@ -87,19 +72,6 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`Handle`, `Password`, `EMail`, `FName`, `LName`, `IsConnected`) VALUES
-('', '$1$mB4.1D2.$tGWbtEvsFh7RYDhvBfT1y/', '', '', '', 0),
-('aa', '0$4LDvVLxB8CI', 'aa', 'a', 'a', 1),
-('ab', '$1$Sj5.z4/.$P3.Da4n6GtU3yVALKw8ZA1', 'ab', 'bo', 'rno', 0),
-('borno', '$1$2F5.hY4.$Aydk4u68lMOl3rFGc1M1e/', 'dsfsf', 'borno', 'akhter', 0),
-('borno2', '*1518DD839417E62F85A86B63403A4AD11F846CFF', 'borno', 'borno2', 'akhter', 0),
-('borno3', '$1$A.0.Jp5.$0TU60pSyHwuGkZiWKfHmU0', 'dsfsf', 'borno', 'akhter', 0),
-('borno4', '$1$av1.bk..$gTF.YhGPInLrZv15uv.Rs0', 'blabla', 'borno', 'akhter', 0);
-
---
 -- Constraints for dumped tables
 --
 
@@ -107,7 +79,7 @@ INSERT INTO `users` (`Handle`, `Password`, `EMail`, `FName`, `LName`, `IsConnect
 -- Constraints for table `friends`
 --
 ALTER TABLE `friends`
-  ADD CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`handle1`) REFERENCES `users` (`Handle`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`handle1`) REFERENCES `users` (`Handle`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

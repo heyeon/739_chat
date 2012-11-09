@@ -1,21 +1,23 @@
 <html>
-
 <head>
 <title> Connect </title>
+<<<<<<< HEAD
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
+=======
+<link rel="stylesheet" type="text/css" href="styles/connect.css" >
+
+>>>>>>> b5a61d25fb0f9f935edadbc03bda9b10d574e634
 </head>
 
 <body margin-left="10px">
 <?php
 include("library.php");
 session_start();
-
-//echo ($_SESSION['connected']);
-
 if(!sessionCheck()){
 
 ?>
+<<<<<<< HEAD
 <h1> Welcome to Connect : Madison's Distribtued Chat System </h1>
 <h3>Login</h3>
 <form class="form-inline" action="login.php" method = "POST">
@@ -39,6 +41,22 @@ if(!sessionCheck()){
 <div class="control-group">
 <label class="control-label"> <strong> Connect Handle: </strong></label>
 <div class="controls">
+=======
+<div>
+	<form name="signup" action="signup.php" method="post">
+		<table>
+			<tr><td>
+				<label> First Name: </label>
+				<input type="text" name="fname"/>
+			</td></tr>
+			<tr><td>
+				<label> Last Name: </label>
+				<input type="text" name="lname"/>
+</td> </tr>
+<tr><td>
+<label> Connect Handle: 
+</label>
+>>>>>>> b5a61d25fb0f9f935edadbc03bda9b10d574e634
 <input type="text" name="handle"/>
 </div></div>
 <div class="control-group">
@@ -72,17 +90,15 @@ else
 drawLoginStatus();
 if (isset($_POST['submitChat']))
 {
-	$text =  $_POST['chatInputArea'] ;
-	echo $text;
-	onNewMessage($_SESSION['connected'], $text);
+	//onNewMessage($_SESSION['connected'], $text);
 }
 ?>
-<div id="chat">
+<div id="upperPanel">
 <table border="1" width="100%" height="80%">
 <tr>
 <td height="70%" width="75%">
 <div id="chatArea">
-<textarea rows="15" cols="100" name="chatBox" readonly="readonly">
+<textarea id="chatTexts" rows="15" cols="100" name="chatBox" readonly="readonly" wrap="hard">
 Chat Area
 </textarea> 
 </div>
@@ -102,20 +118,14 @@ Chat Area
 <tr width="100%">
 <td >
 <div id="chatInput">
-<form id="chatBox" method="POST" action="index.php">
-	<input id="chatInputArea" name="chatInputArea"/>
+<script type="text/javascript" src="scripts/ajax.js"></script>
+<textarea id='inputTextArea' maxlength="5000" placeholder="Enter Your Text Here" wrap="hard" autofocus="autofocus">
+</textArea>
 	<?php
 		drawButton("submitChat", "Enter", "index.php");
 	?>
-</form>
+
 </div>
-</td>
-</tr>
-<tr >
-<td align="right">
-<?php 
-drawLogout(); 
-?>
 </td>
 </tr>
 </table>

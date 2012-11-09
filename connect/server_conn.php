@@ -1,30 +1,28 @@
 <?php
 
-
-$servers = array("54.242.184.151","184.72.85.188");
-$db = "connect";
-$user ="root";
-$password = "root";
-$tables = array(
-	"users" => "users",
-	"friends" => "friends",
-	"messages" => "messages",
-	"load" => "loadinfo"
-);
-$serverCount = count($servers);
-$localIP = $_SERVER['SERVER_ADDR'];
-
 function connect()
 {
-	for($i = 0; $i < $GLOBALS['serverCount']; $i++)
+	$servers = array("54.242.184.151","184.72.85.188");
+	$db = "connect";
+	$user ="root";
+	$password = "root";
+	$tables = array(
+		"users" => "users",
+		"friends" => "friends",
+		"messages" => "messages",
+		"load" => "loadinfo"
+	);
+	$serverCount = count($servers);
+	for($i = 0; $i < $serverCount; $i++)
 	{
-		$conn= mysql_connect($GLOBALS['servers'][$i], $GLOBALS['user'], $GLOBALS['password']);
+		$conn= mysql_connect($servers[$i], $user, $password);
 		if (!$conn)
 		{
 			echo "Could not connect to database". mysql_error();
 		}
 		else
 		{
+			mysql_select_db($db,$conn);
 			return $conn;
 		}
 	}
