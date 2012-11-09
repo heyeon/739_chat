@@ -1,0 +1,78 @@
+html,body{
+    width:100%;
+    height:100%;
+}
+
+body{
+    position:relative;
+}
+
+#wrapper{
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    border:1px solid #333;      
+}
+
+#upperPanel{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:100px;
+}
+
+#chat{
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:200px;
+    background:#666;  
+    overflow:auto;    
+}
+
+#friends{
+    position: absolute;
+    top:0;
+    bottom:0;
+    width:200px;
+    right:0;
+    background:#999;
+    overflow:auto;   
+}
+
+#friends ul{
+    text-align:right;
+}
+
+#bottomPanel{
+    height: 100px;
+	width: 100px;
+    background:#EEE;
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    right:0px;
+}
+
+#inputTextArea{
+    position:absolute;
+    resize: none;
+	height: 20%;
+	width: 65%;
+	background: #517693;
+	color: #FFFFFF;
+}
+
+
+#enterChat {
+    position:relative;
+	left: 1500;
+	top: 0;
+    height: 100px;
+	width: 100px;
+}
+    
