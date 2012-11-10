@@ -1,13 +1,8 @@
 <html>
 <head>
 <title> Connect </title>
-<<<<<<< HEAD
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
-=======
-<link rel="stylesheet" type="text/css" href="styles/connect.css" >
-
->>>>>>> b5a61d25fb0f9f935edadbc03bda9b10d574e634
 </head>
 
 <body margin-left="10px">
@@ -18,7 +13,7 @@ if(!sessionCheck()){
 
 ?>
 <<<<<<< HEAD
-<h1> Welcome to Connect : Madison's Distribtued Chat System </h1>
+<h1> Welcome to Connect : Madison's Distributed Chat System </h1>
 <h3>Login</h3>
 <form class="form-inline" action="login.php" method = "POST">
 <input type ="text" class="input-small" placeholder="Username" name="handle"> </input> 
@@ -41,25 +36,6 @@ if(!sessionCheck()){
 <div class="control-group">
 <label class="control-label"> <strong> Connect Handle: </strong></label>
 <div class="controls">
-=======
-<div>
-	<form name="signup" action="signup.php" method="post">
-		<table>
-			<tr><td>
-				<label> First Name: </label>
-				<input type="text" name="fname"/>
-			</td></tr>
-			<tr><td>
-				<label> Last Name: </label>
-				<input type="text" name="lname"/>
-</td> </tr>
-<tr><td>
-<label> Connect Handle: 
-</label>
->>>>>>> b5a61d25fb0f9f935edadbc03bda9b10d574e634
-<input type="text" name="handle"/>
-</div></div>
-<div class="control-group">
 <label class="control-label"><strong> Connect Password: </strong></label>
 <div class="controls">
 <input type="password" name="passwd"/>
