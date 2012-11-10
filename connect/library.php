@@ -8,8 +8,7 @@
 	
 	function drawButton($name, $value, $target)
 	{
-	 echo "<div><input type='submit' id='enterChat' name='".$name."' value ='".$value."' onClick='noname();' />
-		</div>";
+	 echo "<input type='submit' id='enterChat' class='btn' name='".$name."' value ='".$value."' onClick='noname();' />";
 	}
 	
 	function drawHref($name,$url)
@@ -29,10 +28,12 @@
 		}
 		disconnect($conn);
 	}
+
 	function drawLogout()
 	{
 		drawHref("Log Out", "login.php");
 	}
+
 	function sessionCheck()
 	{
 		if (!isset($_SESSION['connected']))
@@ -41,10 +42,7 @@
 		}
 		return true;
 	}
-	
-	
-	
-		
+
 	function disconnect($conn)
 	{
 		if ($conn)
@@ -69,8 +67,6 @@
 		updateLoginStatus(0,$_SESSION['connected']);
 		session_destroy();
 	}
-	
-	
 	
 	function onNewMessage($handle, $message)
 	{

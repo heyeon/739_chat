@@ -18,7 +18,7 @@ if(!sessionCheck()){
 <div class="control-group">
 <label class="control-label"><strong> Username: </strong></label>
 <div class ="controls">
-<input type="text" name="fname"/>
+<input type="text" name="handle"/>
 </div>
 </div>
 <div class="control-group">
@@ -66,12 +66,31 @@ if(!sessionCheck()){
 </div></div>
 </form>
 </div>
-<div>
+<div class="modal-footer">
+<div class="container">
+<p class="muted credit">
+&#64 2012. Connect Service brought to you by Irtiza Ahmed Akhtar and Zainab Ghadiyali.
+</p>
+</div>
 </div>
 </div>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-transition.js"></script>
+<script src="js/bootstrap-alert.js"></script>
+<script src="js/bootstrap-modal.js"></script>
+<script src="js/bootstrap-dropdown.js"></script>
+<script src="js/bootstrap-scrollspy.js"></script>
+<script src="js/bootstrap-tab.js"></script>
+<script src="js/bootstrap-tooltip.js"></script>
+<script src="js/bootstrap-popover.js"></script>
+<script src="js/bootstrap-button.js"></script>
+<script src="js/bootstrap-collapse.js"></script>
+<script src="js/bootstrap-carousel.js"></script>
+<script src="js/bootstrap-typeahead.js"></script>
 </body>
+
+
 <?php
 }
 else
@@ -79,7 +98,7 @@ else
 drawLoginStatus();
 if (isset($_POST['submitChat']))
 {
-	//onNewMessage($_SESSION['connected'], $text);
+	onNewMessage($_SESSION['connected'], $text);
 }
 ?>
 <div id="upperPanel">
@@ -92,12 +111,11 @@ Chat Area
 </textarea> 
 </div>
 </td>
-<td height="70%" width="75%"	>
-<div id="frindList">
-
-<table name="friendList">
+<td height="70%" width="75%" background-color="#ffffff">
+<div id="friendList">
+<table class="table table-hover">
 <tr>
-<th> Friend List </th	>
+<th> Friend List </th>
 </tr>
 <?php pullFriendList(); ?>
 </table>
@@ -108,7 +126,7 @@ Chat Area
 <td >
 <div id="chatInput">
 <script type="text/javascript" src="scripts/ajax.js"></script>
-<textarea id='inputTextArea' maxlength="5000" placeholder="Enter Your Text Here" wrap="hard" autofocus="autofocus">
+<textarea id='inputTextArea' maxlength="5000" placeholder="Enter Your Text Here" display='block' width='100%' height='100%' position='absolute' autofocus="autofocus">
 </textArea>
 	<?php
 		drawButton("submitChat", "Enter", "index.php");
@@ -120,6 +138,14 @@ Chat Area
 </table>
 </div>
 
+<div id="footer">
+<div class="container">
+<p class="muted credit">
+Connect Service brought to you by Irtiza Ahmed Akhtar and Zainab Ghadiyali
+</p>
+</div>
+</div>
+</div>
 <?php 
 
 } ?>
