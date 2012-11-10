@@ -64,6 +64,15 @@ if(!sessionCheck()){
 <div class="controls">
 <input class="btn btn-large btn-primary" type="submit" value="Sign Up!!">
 </div></div>
+<div id="fb-root"></div>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
+<script>
+FB.init({
+appId:'278629895590946', cookie:true,
+status:true, xfbml:true
+});
+</script>
+<fb:login-button>Login with Facebook</fb:login-button>
 </form>
 </div>
 <div class="modal-footer">
