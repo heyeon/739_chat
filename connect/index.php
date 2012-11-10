@@ -2,9 +2,8 @@
 <head>
 <title> Connect </title>
 <!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap.css" rel="stylesheet">
 </head>
-
 <body margin-left="10px">
 <?php
 include("library.php");
@@ -12,13 +11,26 @@ session_start();
 if(!sessionCheck()){
 
 ?>
-<<<<<<< HEAD
-<h1> Welcome to Connect : Madison's Distributed Chat System </h1>
+<div class="hero-unit">
+<h2> Welcome to Connect : Madison's Distributed Chat System </h2>
 <h3>Login</h3>
-<form class="form-inline" action="login.php" method = "POST">
-<input type ="text" class="input-small" placeholder="Username" name="handle"> </input> 
-<input type = "password" class="input-small" placeholder="Pasword" name="password"> </input> 
-<input class="btn" type="submit" name="login" value="Log In"> </input>
+<form class="form-horizontal" action="login.php" method = "POST">
+<div class="control-group">
+<label class="control-label"><strong> Username: </strong></label>
+<div class ="controls">
+<input type="text" name="fname"/>
+</div>
+</div>
+<div class="control-group">
+<label class="control-label"><strong> Password: </strong></label>
+<div class ="controls">
+<input type="text" name="password"/>
+</div>
+</div>
+<div class="control-group">
+<div class="controls">
+<input class="btn btn-large btn-primary" type="submit" value="Log In!!">
+</div></div>
 </form>
 <h3>Register now</h3>
 <form class="form-horizontal" name="signup" action="signup.php" method="post">
@@ -36,6 +48,9 @@ if(!sessionCheck()){
 <div class="control-group">
 <label class="control-label"> <strong> Connect Handle: </strong></label>
 <div class="controls">
+<input type="text" name="handle"/>
+</div></div>
+<div class="control-group">
 <label class="control-label"><strong> Connect Password: </strong></label>
 <div class="controls">
 <input type="password" name="passwd"/>
@@ -52,9 +67,7 @@ if(!sessionCheck()){
 </form>
 </div>
 <div>
-<table border="1">
-<tr>
-</table>
+</div>
 </div>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="js/bootstrap.min.js"></script>
