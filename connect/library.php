@@ -8,12 +8,26 @@
 	
 	function drawButton($name, $value, $target)
 	{
-	 echo "<input type='submit' id='enterChat' class='btn' name='".$name."' value ='".$value."' onClick='noname();' />";
+	 echo "<input type='submit' id='enterChat' class='btn' name='".$name."' value ='".$value."' onClick='$target;' />";
 	}
 	
 	function drawHref($name,$url)
 	{
 		return "<a href=".$url.">". $name ."</a>";
+	}
+	
+	function pullNewMessage()
+	{
+		$conn = connect();
+		$query = "SELECT * FROM messages WHERE (UNIX_TIMESTAMP(CURRENT_TIMESTAMP)- UNIX_TIMESTAMP(Time)) > 1";
+		$result = mysql_query($query);
+		while ($row = mysql_fetch_array($result))
+		{
+			echo  $row['Time'] ."\t".$row['Handle']. "\t said:". "\t". $row['Message'] ."\n" ;
+		//	echo UNIX_TIMESTAMP(CURRENT_TIMESTAMP)."\t". UNIX_TIMESTAMP(Time);
+			
+		}
+		disconnect($conn);
 	}
 	
 	function pullFriendList()
@@ -24,7 +38,7 @@
 		$result = mysql_query($query);
 		while ($row = mysql_fetch_array($result))
 		{
-			echo "<tr><td>". $row['Handle']. "</td></tr>";
+			echo $row['Handle'];
 		}
 		disconnect($conn);
 	}
@@ -68,7 +82,7 @@
 		session_destroy();
 	}
 	
-	function onNewMessage($handle, $message)
+	function submitNewMessage($handle, $message)
 	{
 		$query = "INSERT INTO messages (Handle,Message)	VALUES ('$handle','$message')";
 		$conn = connect();
@@ -172,6 +186,4 @@
 			}
 		}
 	}
-
-
 ?>

@@ -1,0 +1,17 @@
+
+textarea 
+{
+	overflow: auto; 
+	overflow-y: auto; 
+	
+	white-space: nowrap;
+	resize: none;
+	
+}
+
+textarea:hover
+{
+	cursor: text;
+}
+
+    
