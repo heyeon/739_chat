@@ -167,7 +167,7 @@
 		{
 			drawLoginStatus();
 		?>
-		<div id="upperPanel">
+		<div id="upperPanel" class="hero-unit">
 		<table border="1" width="100%" height="80%">
 		<tr>
 		<td height="70%" width="75%">
@@ -219,6 +219,6 @@
 					});
 				</script>
 				<fb:login-button>Login with Facebook</fb:login-button>
-		</div>
+			</div>
 	</body>
 </html>
