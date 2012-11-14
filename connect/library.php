@@ -3,7 +3,8 @@
 	
 	function drawLoginStatus()
 	{
-		echo "<div id='header'> Welcome ". $_SESSION['connected']. " (Connected From -" .$_SERVER['REMOTE_ADDR'].") ". drawHref("Log Out", "login.php") ."<div>";	
+		echo "<div id='header'> <h3> Welcome ". $_SESSION['connected']. " (Connected From -" .$_SERVER['REMOTE_ADDR'].") ". drawHref("Log Out", "login.php") ."</h3>
+		<fb:login-button>Login with Facebook</fb:login-button></div>";	
 	}
 	
 	function drawButton($name, $value, $target)
@@ -19,13 +20,11 @@
 	function pullNewMessage()
 	{
 		$conn = connect();
-		$query = "SELECT * FROM messages WHERE (UNIX_TIMESTAMP(CURRENT_TIMESTAMP)- UNIX_TIMESTAMP(Time)) > 1";
+		$query = "SELECT * FROM messages WHERE (UNIX_TIMESTAMP(CURRENT_TIMESTAMP)- UNIX_TIMESTAMP(Time)) <= 1";
 		$result = mysql_query($query);
 		while ($row = mysql_fetch_array($result))
 		{
-			echo  $row['Time'] ."\t".$row['Handle']. "\t said:". "\t". $row['Message'] ."\n" ;
-		//	echo UNIX_TIMESTAMP(CURRENT_TIMESTAMP)."\t". UNIX_TIMESTAMP(Time);
-			
+			echo  $row['Time']."\t".$row['Handle']."\t said:"."\t". $row['Message'];
 		}
 		disconnect($conn);
 	}
@@ -33,12 +32,11 @@
 	function pullFriendList()
 	{
 		$conn = connect();
-		$handle = $_SESSION['connected'];
 		$query = "SELECT * FROM users";
 		$result = mysql_query($query);
 		while ($row = mysql_fetch_array($result))
 		{
-			echo $row['Handle'];
+			 echo json_encode($row['Handle']);
 		}
 		disconnect($conn);
 	}
@@ -91,14 +89,6 @@
 	}
 	
 	
-	function sanityCheck() //stub function for now we will implement it later to verify user input
-	{
-		return true;
-	}
-	
-	
-	
-	
 	function signup($conn, $vals)	
 	{
 	if (!$conn)
@@ -112,21 +102,13 @@
 		$lname = $vals['lname'];
 		$password =crypt($_POST['passwd'],0) ;
 		$email = $vals['email'];
-		if (sanityCheck()) 
-		{
-			$conn = connect();
-			$query = "INSERT INTO users (Handle,FName,LName,Password,EMail)
-			VALUES ('$handle','$fname','$lname','$password','$email')";
-			mysql_query($query);
-			onLoginSuccess($handle);
-			echo "Signup Successful" ;
-			return true;
-		}
-		else
-		{
-			echo "Check Your Input";
-			return false;
-		}
+		$conn = connect();
+		$query = "INSERT INTO users (Handle,FName,LName,Password,EMail)
+		VALUES ('$handle','$fname','$lname','$password','$email')";
+		mysql_query($query);
+		onLoginSuccess($handle);
+		echo "Signup Successful" ;
+		return true;
 	}
 }
 
@@ -138,51 +120,48 @@
 		mysql_query($query);
 		disconnect();
 	}
-		
-	function login($conn, $vals)
+	
+	function checkUsername($handle)
 	{
-		if (!$conn)
+		$conn = connect();
+		$query = "SELECT * FROM users WHERE Handle='$handle'";
+		$result = mysql_query($query, $conn);
+		$row = mysql_fetch_array($result);
+		if (!$row)
 		{
-			echo "Connection Error " . mysql_error();
+			echo "true";
 		}
 		else
 		{
-			$handle = $vals['handle'] ;
-			$password = crypt($_POST['password'],0) ;
-			if (sanityCheck()) 
+			echo "false";
+		}
+	}
+		
+	function login($handle, $pass)
+	{
+		$conn = connect();
+		$password = crypt($pass,0) ;
+		$query = "SELECT * FROM users WHERE Handle='$handle'";
+		$result = mysql_query($query, $conn);
+		if (!$result)
+		{
+			die('Die :'.mysql_error());
+			return false;
+		}
+		$row = mysql_fetch_array($result);
+		if (!$row)
+		{
+			$_SESSION['error'] = "User does not exist, Please sign up!!";
+		}
+		else
+		{	
+			if ($row['Password']==$password)
 			{
-				$query = "SELECT * FROM users WHERE Handle='$handle'";
-				$result = mysql_query($query, $conn);
-				if (!$result)
-				{
-					die('Die :'.mysql_error());
-					return false;
-				}
-				$row = mysql_fetch_array($result);
-				if (!$row)
-				{
-					echo "User does not exist, Please sign up!!";
-					return false;
-				}
-				else
-				{	
-					if ($row['Password']==$password)
-					{
-						onLoginSuccess($handle);
-					}
-					else
-					{
-						echo "Log in Failed!! Reason: Incorrect Password";
-						return false;
-					}
-				}
-				
-				return true;
+				onLoginSuccess($handle);
 			}
 			else
 			{
-				echo "Check Your Input";
-				return false;
+				$_SESSION['error'] =  "Log in Failed!! Reason: Incorrect Password";
 			}
 		}
 	}

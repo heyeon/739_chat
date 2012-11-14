@@ -12,4 +12,8 @@
 	{
 		submitNewMessage("borno",$_POST['newMessage']);
 	}
+	else if  (isset($_POST['handle']))
+	{
+		checkUsername($_POST['handle']);
+	}
 ?>

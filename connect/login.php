@@ -4,16 +4,13 @@
 	if (!sessionCheck())
 	{
 		$conn = connect();
-		echo $_POST['password'];
-		echo $_POST['handle'];
-		$result = login($conn,$_POST);
-		return 0;
+		$result = login($_POST['loginHandle'], $_POST['loginPassword']);
+		header("Location: index.php");
 	}
 	else
 	{
 		onLogOutSuccess();
 		header("Location: index.php");
-		return 0;
 	}
 ?>
 

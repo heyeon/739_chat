@@ -1,12 +1,56 @@
+body
+{
+	margin:0;
+	padding:0;
+}
+#body
+{
+	width: 800px; 
+	height: 70%;
+	margin:auto
+}
+
+em 
+{ 
+	font-weight: bold; 
+	padding-right: 1em; 
+	vertical-align: top; 
+	color: red;
+}
 
 textarea 
 {
-	overflow: auto; 
 	overflow-y: auto; 
-	
-	white-space: nowrap;
 	resize: none;
-	
+}
+
+* { 
+	font-family: Verdana; 
+	font-size: 96%; 
+}
+
+label 
+{ 
+	width: 15em;  
+}
+
+label.error 
+{ 
+	float: right;
+	color: blue; 
+	padding-left: .5em; 
+	vertical-align: top; 
+}
+
+#loginError
+{
+	text-align: center;
+	color: blue;
+}
+
+#friendList
+{
+	overflow:scroll; 
 }
 
 textarea:hover
