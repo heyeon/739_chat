@@ -32,15 +32,14 @@
 			
 			function scrollBox()
 			{
-				var elem = document.getElementById('chatTexts');
-				elem.scrollTop = 1;
+				$("chatTexts").scrollTop(200); // this was an attempt to make the chatText textarea autoscroll but something is missing. May be you can have a look.
 			}
 			
 			function submitChat()
 			{
 				if ($('#inputTextArea').val() != "")
 				{
-					$.post("ajax.php", {newMessage:$('#inputTextArea').val(),sender:data}, 
+					$.post("ajax.php", {newMessage:$('#inputTextArea').val(),sender:"borno"}, 
 						function(data)
 						{
 							$("#inputTextArea").val("");
@@ -80,7 +79,7 @@
 						}
 					}
 				); 
-				setTimeout('update()', 1000);
+				setTimeout('update()', 2000);
 			}
 			function checkUserName()
 			{	

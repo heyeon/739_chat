@@ -20,10 +20,18 @@
 	function pullNewMessage()
 	{
 		$conn = connect();
-		$query = "SELECT * FROM messages WHERE (UNIX_TIMESTAMP(CURRENT_TIMESTAMP)- UNIX_TIMESTAMP(Time)) <= 1";
+		$handle = "borno";
+		$query = "SELECT MsgId FROM users WHERE Handle='borno'";
+		$result = mysql_query($query);
+		$row = mysql_fetch_array($result);
+		$id = $row["MsgId"];
+		$query = "SELECT * FROM messages WHERE id > '$id'";
 		$result = mysql_query($query);
 		while ($row = mysql_fetch_array($result))
 		{
+			$lastId = $row['id'];
+			$query = "UPDATE users SET MsgId='$lastId' WHERE Handle='$handle'";
+			mysql_query($query);
 			echo  $row['Time']."\t".$row['Handle']."\t said:"."\t". $row['Message']."<br>";
 		}
 		disconnect($conn);
