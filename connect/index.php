@@ -38,13 +38,16 @@
 			
 			function submitChat()
 			{
-				$.post("ajax.php", {newMessage:$("#inputTextArea").val()}, 
-					function(data)
-					{
-						$("#inputTextArea").val("");
-						scrollBox();
-					}
-				);
+				if ($('#inputTextArea').val() != "")
+				{
+					$.post("ajax.php", {newMessage:$('#inputTextArea').val(),sender:data}, 
+						function(data)
+						{
+							$("#inputTextArea").val("");
+							scrollBox();
+						}
+					);
+				}
 			}
 			function update()
 			{
@@ -53,7 +56,12 @@
 					{
 						if (data != "")
 						{
-							$("#chatTexts").val($("#chatTexts").val()+ "\n"+data);
+							var messages = data.split("<br>");
+							var numNewMessages = messages.length;
+							for (i = 0; i < numNewMessages-1; i++)
+							{
+								$("#chatTexts").val($("#chatTexts").val()+ "\n"+messages[i]);
+							}
 						}
 						
 					}
@@ -62,9 +70,14 @@
 				$.post("ajax.php", {friendList:"friendList"}, 
 				function(data)
 					{
+						var frndList = data.split("<br>");
 						$('#friendList').empty();
-						var row = $("<tr><td>" + data +"</td><td> <img src = 'img/online.png' width='10px' height='10px' /></td></tr>");
-						$('#friendList').append(row);
+						var length = frndList.length;
+						for (i = 0; i < length-1; i++)
+						{
+							var row = $("<tr><td>" + frndList[i] +"</td><td> <img src = 'img/online.png' width='10px' height='10px' /></td></tr>");
+							$('#friendList').append(row);
+						}
 					}
 				); 
 				setTimeout('update()', 1000);
@@ -197,11 +210,9 @@
 				</div>
 			</form>
 		</div>
-		<div class="modal-footer">
-			<div class="container">
-				<p class="muted credit">
-					&#64 2012. Connect Service brought to you by Irtiza Ahmed Akhtar and Zainab Ghadiyali.
-				</p>
+		<div id="footer">
+			<div class="headerDiv">
+				<p class="muted credit" align='center'> Connect Service brought to you by Irtiza Ahmed Akhtar and Zainab Ghadiyali	</p>
 			</div>
 		</div>
 		<?php
@@ -210,40 +221,33 @@
 		{
 			drawLoginStatus();
 		?>
-		<div id="upperPanel" class="hero-unit">
-		<table border="1" width="100%" height="80%">
-		<tr>
-			<td height="70%" width="75%">
-				<div id="chatArea">
-				<textarea id="chatTexts" rows="15" cols="100" name="chatTexts" readOnly="readOnly">
-				</textarea> 
-				</div>
-			</td>
-			<td height="70%" width="25%" background-color="#ffffff">
-				<table id="friendList" name="friendList" class="table table-hover" height="100%" width="100%">
-						<tr>
-							<th> Friend List </th> 
-							<th> Status </th>
-						</tr>
+		<div id="contentWrap" class="contentWrap">
+			<div id="upperPanel" class="hero-unit">
+				<textarea id="chatTexts"  name="chatTexts" readOnly="readOnly"></textarea> 
+			</div>
+			<div id="rightPanel">
+				<label> Online Friends</label>
+				<table id="friendList" name="friendList" class="table table-hover">
+					
 				</table>
-			</td>
-		</tr>
-		<tr width="100%">
-		<td >
-		<div id="chatInput">
-		<textarea id="inputTextArea" maxlength="5000" placeholder="Enter Your Text Here"  width="100%" height="100%" autofocus="autofocus">
-		</textArea>
-			<?php
-				drawButton("submitChat", "Enter", "submitChat()");
-			?>
+			</div>
 		</div>
-		</td>
-		</tr>
-		</table>
+		
+		<div id="bottomPanel" class="contentWrap">
+			<div id="bottomLeftPanel" class="hero-unit">
+				<textarea id="inputTextArea" name="inputTextArea" placeholder="Enter Your Text Here"></textArea>
+			</div>
+			<div id="bottomRightPanel">
+				<?php
+					drawButton("submitChat", "Enter", "submitChat()");
+				?>
+			</div>
 		</div>
+			
+		
 		<div id="footer">
-			<div class="container">
-				<p class="muted credit"> Connect Service brought to you by Irtiza Ahmed Akhtar and Zainab Ghadiyali	</p>
+			<div class="headerDiv">
+				<p class="muted credit" align='center'> Connect Service brought to you by Irtiza Ahmed Akhtar and Zainab Ghadiyali	</p>
 			</div>
 		</div>
 	

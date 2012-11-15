@@ -3,13 +3,13 @@
 	
 	function drawLoginStatus()
 	{
-		echo "<div id='header'> <h3> Welcome ". $_SESSION['connected']. " (Connected From -" .$_SERVER['REMOTE_ADDR'].") ". drawHref("Log Out", "login.php") ."</h3>
-		<fb:login-button>Login with Facebook</fb:login-button></div>";	
+		echo "<div id='header' class='headerDiv'> <h4 align='center'> Welcome ". $_SESSION['connected']. " (Connected From -" .$_SERVER['REMOTE_ADDR'].") ". drawHref("Log Out", "login.php") ."</h4>
+		<fb:login-button align='center'>Login with Facebook</fb:login-button></div>";	
 	}
 	
 	function drawButton($name, $value, $target)
 	{
-	 echo "<input type='submit' id='enterChat' class='btn' name='".$name."' value ='".$value."' onClick='$target;' />";
+	 echo "<input type='submit' id='enterChat' class='btn btn-large btn-primary' name='".$name."' value ='".$value."' onClick='$target;' />";
 	}
 	
 	function drawHref($name,$url)
@@ -24,7 +24,7 @@
 		$result = mysql_query($query);
 		while ($row = mysql_fetch_array($result))
 		{
-			echo  $row['Time']."\t".$row['Handle']."\t said:"."\t". $row['Message'];
+			echo  $row['Time']."\t".$row['Handle']."\t said:"."\t". $row['Message']."<br>";
 		}
 		disconnect($conn);
 	}
@@ -32,11 +32,11 @@
 	function pullFriendList()
 	{
 		$conn = connect();
-		$query = "SELECT * FROM users";
+		$query = "SELECT * FROM users WHERE IsConnected = 1";
 		$result = mysql_query($query);
 		while ($row = mysql_fetch_array($result))
 		{
-			 echo json_encode($row['Handle']);
+			 echo $row['Handle']."<br>";
 		}
 		disconnect($conn);
 	}
@@ -84,7 +84,10 @@
 	{
 		$query = "INSERT INTO messages (Handle,Message)	VALUES ('$handle','$message')";
 		$conn = connect();
-		mysql_query($query);
+		if (!mysql_query($query, $conn))
+		{
+			die('Die :'.mysql_error());
+		}
 		disconnect($conn);
 	}
 	

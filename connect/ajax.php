@@ -10,7 +10,7 @@
 	}
 	else if  (isset($_POST['newMessage']))
 	{
-		submitNewMessage("borno",$_POST['newMessage']);
+		submitNewMessage($_POST['sender'],$_POST['newMessage']);
 	}
 	else if  (isset($_POST['handle']))
 	{
