@@ -4,7 +4,8 @@
 	function drawLoginStatus()
 	{
 		echo "<div id='header' class='headerDiv'> <h4 align='center'> Welcome ". $_SESSION['connected']. " (Connected From -" .$_SERVER['REMOTE_ADDR'].") ". drawHref("Log Out", "login.php") ."</h4>
-		<fb:login-button align='center'>Login with Facebook</fb:login-button></div>";	
+		<fb:login-button align='center'>Login with Facebook</fb:login-button></div>
+		<div id='handle' style='display: none;' >". $_SESSION['connected']. "</div>";	
 	}
 	
 	function drawButton($name, $value, $target)
@@ -17,11 +18,10 @@
 		return "<a href=".$url.">". $name ."</a>";
 	}
 	
-	function pullNewMessage()
+	function pullNewMessage($handle)
 	{
 		$conn = connect();
-		$handle = "borno";
-		$query = "SELECT MsgId FROM users WHERE Handle='borno'";
+		$query = "SELECT MsgId FROM users WHERE Handle='$handle'";
 		$result = mysql_query($query);
 		$row = mysql_fetch_array($result);
 		$id = $row["MsgId"];

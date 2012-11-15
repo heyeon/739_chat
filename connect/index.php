@@ -28,7 +28,7 @@
 				status:true, xfbml:true
 			});
 			
-			
+			var handle;
 			
 			function scrollBox()
 			{
@@ -39,7 +39,7 @@
 			{
 				if ($('#inputTextArea').val() != "")
 				{
-					$.post("ajax.php", {newMessage:$('#inputTextArea').val(),sender:"borno"}, 
+					$.post("ajax.php", {newMessage:$('#inputTextArea').val(),sender:$("#handle").html()}, 
 						function(data)
 						{
 							$("#inputTextArea").val("");
@@ -48,9 +48,12 @@
 					);
 				}
 			}
+			
+			
+			
 			function update()
 			{
-				$.post("ajax.php", {chatBox:"chatbox"}, 
+				$.post("ajax.php", {chat:$('#inputTextArea').val(),sender:$("#handle").html()}, 
 				function(data)
 					{
 						if (data != "")
@@ -79,7 +82,7 @@
 						}
 					}
 				); 
-				setTimeout('update()', 2000);
+				setTimeout('update()', 1000);
 			}
 			function checkUserName()
 			{	
@@ -218,6 +221,10 @@
 		}
 		else
 		{
+			if (isset($_POST['handleName']))
+			{
+				echo $_SESSION['connected'];
+			}
 			drawLoginStatus();
 		?>
 		<div id="contentWrap" class="contentWrap">

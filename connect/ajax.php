@@ -1,8 +1,8 @@
 <?php
 	include('library.php');
-	if (isset($_POST['chatBox']))
+	if (isset($_POST['chat']))
 	{
-		pullNewMessage();
+		pullNewMessage($_POST['sender']);
 	}
 	else if (isset($_POST['friendList']))
 	{
