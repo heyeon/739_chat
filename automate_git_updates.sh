@@ -4,7 +4,7 @@
 
 date
 cd
-git clone https://github.com/heyeon/739_chat
+sudo git clone https://github.com/heyeon/739_chat
 echo "Cloned remote into mirror"
 sudo cp -rf 739_chat /home/ubuntu/739
 echo "Copying files from mirror to master"
