@@ -27,7 +27,7 @@ if(!isset($_SESSION['connected']))
 		$logoutUrl=$facebook->getLogoutUrl();
 	}else{
 		$loginUrl=$facebook->getLoginUrl(array(
-					'scope'=>'read_stream, publish_stream,user_about_me,email',
+					'scope'=>'user_about_me,email',
 					'redirect_uri'=>$site_url,));
 	}
 	if($user){
