@@ -1,4 +1,8 @@
 <?php
+/**
+Objective: Inlist php functions utlized by chat application 
+Authors: Irtiza Ahmed Akhter irtiza@cs.wisc.edu,Zainab Ghadiyali zainab@cs.wisc.edu
+**/
 	include ("server_conn.php");
 	
 	function drawLoginStatus()
@@ -127,7 +131,8 @@
 	{
 		$conn = connect();
 		mysql_select_db("connect", $conn);
-		$query = "UPDATE users SET IsConnected='$loginStatus' WHERE Handle='$handle'";
+		$query = "UPDATE users SET IsConnected='$loginStatus'
+			 WHERE Handle='$handle'";
 		mysql_query($query);
 		disconnect();
 	}

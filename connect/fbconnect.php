@@ -32,26 +32,22 @@ if(!isset($_SESSION['connected']))
 	}
 	if($user){
 		try{
-			echo "HELLO WORLD";
 				$user_profile=$facebook->api('/me');
 
-print_r($user_profile);
 			$con = connect();
-			$FName = "".$user_profile['first_name']."";
-			$LName = "".$user_profile['last_name']."";
+			$FName = "'".$user_profile['first_name']."'";
+			$LName = "'".$user_profile['last_name']."'";
 			$Handle = $FName;
-			$Password = ' ';
-			$Email = "'".$user_profile['email']."'";
-			echo $FName, $LName, $Handle, $Email;
-			$query=sprintf("SELECT * from users WHERE Handle = '%s'", $Handle);
+			$Password = "'".crypt('739',0)."'";
+			$EMail = "'".$user_profile['email']."'";
+			$query=sprintf("SELECT * from users WHERE Handle = %s", $Handle);
 			$res=mysql_query($query) or die('Query failed: '.mysql_error()."<br>\n$query");
 			if(mysql_num_rows($res) == 0)
 			{
-				$query = "INSERT INTO users (Handle,FName,LName,Password,EMail)
-					VALUES ('$Handle','$FName','$LName','$Password','$Email')";
-				mysql_query($query);
-				onLoginSuccess($handle);
-				echo "Signup Successful" ;
+				$conn=connect();
+				$query = "INSERT INTO users (Handle,FName,LName,Password,EMail) VALUES ($Handle,$FName,$LName,$Password,$EMail)";
+				$res=mysql_query($query) or die('Query failed: '.mysql_error()."<br>\n$query");
+				onLoginSuccess($Handle);
 				return true;
 			}
 			else{
