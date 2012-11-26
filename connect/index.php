@@ -65,7 +65,7 @@
 					<div class="controls">
 						<input class="btn btn-large btn-primary" type="submit" value="Log In!!" ">
 						<h4> OR </h4>
-						<a href="<?php echo $loginUrl;?>"><img src="images/f-connect.png" alt="Connect to your Facebook Account"></a>
+						<a href="<?php echo $loginUrl;?>"><img src="img/f-connect.png" alt="Connect to your Facebook Account"></a>
 					</div>
 				</div>
 			</form>
