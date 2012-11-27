@@ -39,7 +39,7 @@
 			if(!sessionCheck()){
 		?>
 		<div id="body" class="hero-unit">
-			<h2> Welcome to Connect : Madison's Distributed Chat System </h2>
+			<h2> Welcome to Connect : Madison's Distributed Message Board </h2>
 			<h3>Login</h3>
 			<?php
 				if (isset($_SESSION['error']))

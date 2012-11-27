@@ -8,7 +8,6 @@ Authors: Irtiza Ahmed Akhter irtiza@cs.wisc.edu,Zainab Ghadiyali zainab@cs.wisc.
 	function drawLoginStatus()
 	{
 		echo "<div id='header' class='headerDiv'> <h4 align='center'> Welcome ". $_SESSION['connected']. " (Connected From -" .$_SERVER['REMOTE_ADDR'].") ". drawHref("Log Out", "login.php") ."</h4>
-		<fb:login-button align='center'>Login with Facebook</fb:login-button></div>
 		<div id='handle' style='display: none;' >". $_SESSION['connected']. "</div>";	
 	}
 	
