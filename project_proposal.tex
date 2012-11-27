@@ -1,0 +1,65 @@
+ss{article}
+\begin{document}
+\title{Connect - A study in distributed chat applications}
+\author{Irtiza Ahmed Akhtar, Zainab Ghadiyali}
+
+\maketitle
+
+\section{Abstract}
+Distributed Systems are widely popular and increasingly important given the yearly increase in number of internet users and scalable systems. In this paper, we describe the design, implementation and analysis of connect, a distributed system built on top of EC2 service. 
+\section{Introduction}
+\label{Introduction}
+The increasing ubiquity of distributed and chat systems has paved way for an increasing number of advances in both. Deploying a chat system over a distrbuted system can be done in several ways. Internet Relay Chat (IRC) is one of the oldest chat systems found on the internet. The backbone structure is a spanning tree of servers and users connect to one of these servers. The message then trickles down to all servers across the spanning tree. The protocol is simple and widely studied. Another type of chat dsystem is web based with each chat application differing in interface and functionality. AOL Instant Messenger, Facebook Messenger and Google Chat are some examples dominating this space.
+ 
+\section{Background}
+\label{Background}
+\subsection{Distribtued System}
+\subsection{Chat System}
+As mentioned in \ref{Introduction}, chat systems are of two main types. 
+\subsubsection{IRC}
+Internet Relay Chat(IRC\cite{IRC}) was a rather widely used chat system. Each IRC network comprises of a spanning tree structure of servers who typically listen on port 6667. A user idetnfies himself within the IRC-network through a designation username. The username is hence unique within a particular network. 
+IRC networks comprise of several channels which form meeting and discussion avenues. Since channels are so critical to IRC functioning, it is imperative that these channels be unique and consistent throughout the network. An IRC operator works as an admin to override actions of remove users from network. 
+\subsubsection{Web-chat}
+A web chat system uses a browser as a user interface and HTTP as underlying application protocol. Typically, a web chat service has a login system to authenticate users and a session id to maintain consistency and ensure that each user gets the chat message broadcasted.
+\subsection{Distributed Chat System}
+
+\section{Methodology}
+\subsection{Design}
+In our chat system we use the TCP protocol for communication between the chat server and client while communication between the chat client and location server is via HTTP and TCP. TCP is a connection oriented reliable protocol and states related to each TCP connection need to be maintained at both client and server side. UDP could be used for transfer of chat messages, however we choose TCP over UDP due to TCP's reliability and the fact that packet loss may occur. 
+The chat application is to be implemented using a client–server architecture:
+\begin{enumerate}
+\item Clients connect to a chat server who in turn is responsible for broadcasting these messages.
+\item Since the chat server has the key role of transmitting and storing
+messages, it is important to automate the chat server as much as possible in
+order to improve operational performance.
+\item The network must be secure to protect messages irrespetive of whether the
+clients connect through an insecure/public network.
+\item The client must be able to use the chat service irrespective of changes to
+the chat server and internal application network.
+\item The clients must be able to connect to the chat server irrespective of
+firewalls.
+\item The client must have easy access to the chat application through all major
+browsers
+\end{enumerate}
+\subsection{Implementation}
+
+\section{Results}
+\subsection{Design}
+\subsection{Operational Efficiency}
+\subsection{}
+
+\section{Discussion}
+
+\section{Conclusion}
+
+\begin{thebibliography}{99}
+\bibitem{lamport} Lamport, L., {\it LaTeX : A Documentation
+ Preparation System User's Guide and Reference Manual}, Addison-Wesley 
+ Pub Co., 2nd edition, August 1994.
+\bibitem{IRC} J. Oikarinen and D. Reed, “Internet Relay Chat Protocol
+RFC 1495,” 1993.
+\end{thebibliography}
+ 
+% Stop your text
+\end{document}
+

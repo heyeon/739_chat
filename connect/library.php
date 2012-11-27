@@ -1,10 +1,13 @@
 <?php
+/**
+Objective: Inlist php functions utlized by chat application 
+Authors: Irtiza Ahmed Akhter irtiza@cs.wisc.edu,Zainab Ghadiyali zainab@cs.wisc.edu
+**/
 	include ("server_conn.php");
 	
 	function drawLoginStatus()
 	{
 		echo "<div id='header' class='headerDiv'> <h4 align='center'> Welcome ". $_SESSION['connected']. " (Connected From -" .$_SERVER['REMOTE_ADDR'].") ". drawHref("Log Out", "login.php") ."</h4>
-		<fb:login-button align='center'>Login with Facebook</fb:login-button></div>
 		<div id='handle' style='display: none;' >". $_SESSION['connected']. "</div>";	
 	}
 	
@@ -127,7 +130,8 @@
 	{
 		$conn = connect();
 		mysql_select_db("connect", $conn);
-		$query = "UPDATE users SET IsConnected='$loginStatus' WHERE Handle='$handle'";
+		$query = "UPDATE users SET IsConnected='$loginStatus'
+			 WHERE Handle='$handle'";
 		mysql_query($query);
 		disconnect();
 	}
