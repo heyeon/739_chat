@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[12pt, twocolumn]{article}
 \usepackage[lmargin=2cm,rmargin=2cm,bmargin=3cm,tmargin=2cm]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
@@ -11,7 +11,7 @@ Author={Irtiza Ahmed Akhter, Zainab Ghadiyal},
 Keywords (Distrbuted;Chat;)
 }}
 
-\title{A Distributed Message Board}
+\title{Connect: A Distributed Message Board}
 \author{Irtiza Ahmed Akhter\\
 \texttt{irtiza@cs.wisc.edu} \and Zainab Ghadiyali\\ \texttt{zainab@cs.wisc.edu}}
 
@@ -21,24 +21,21 @@ Keywords (Distrbuted;Chat;)
 
 
 \section{Abstract}
-Distributed Systems are widely popular and increasingly important given the yearly increase in number of Internet users and scalable systems. In this paper, we describe the design, implementation and analysis of connect, a distributed system built on top of EC2 service. 
+Distributed Systems are widely popular and increasingly important given the yearly increase in number of Internet users and scalable systems. In this paper, we describe the design, implementation and analysis of Connect, a distributed system built on top of Amazon's EC2 service. Web stress testing shows that latency is directly proportional to the number of users online. 
+ 
 \section{Introduction}
 \label{Introduction}
-The increasing ubiquity of distributed and chat systems has paved way for an increasing number of advances in both. Deploying a chat system over a distributed system can be done in several ways. Internet Relay Chat (IRC) is one of the oldest chat systems found on the Internet. The backbone structure is a spanning tree of servers and users connect to one of these servers. The message then trickles down to all servers across the spanning tree. The protocol is simple and widely studied. Another type of chat dsystem is web based with each chat application differing in interface and functionality. AOL Instant Messenger, Facebook Messenger and Google Chat are some examples dominating this space.
+
+The increasing ubiquity of distributed systems utilized for communication has paved way for an increasing number of advances. Deploying a communication system over a distributed system can be done in several ways. Internet Relay Chat (IRC) is one of the oldest communication tools found on the Internet. The backbone structure is a spanning tree of servers and users connect to one of these servers. The message then trickles down to all servers across the spanning tree. The protocol is simple and widely studied. Another type of chat dsystem is web based with each chat application differing in interface and functionality. AOL Instant Messenger, Facebook Messenger and Google Chat are some examples dominating this space.
  
-\section{Background}
-\label{Background}
-\subsection{Distributed System}
-\subsection{Chat System}
-As mentioned in \ref{Introduction}, chat systems are of two main types. 
 \subsubsection{IRC}
-Internet Relay Chat(IRC\cite{IRC}) was a rather widely used chat system. Each IRC network comprises of a spanning tree structure of servers who typically listen on port 6667. A user idetnfies himself within the IRC-network through a designation username. The username is hence unique within a particular network. 
+Internet Relay Chat(IRC\cite{IRC}) was a rather widely used communication tool. Each IRC network comprises of a spanning tree structure of servers who typically listen on port 6667. A user idetnfies himself within the IRC-network through a designation username. The username is hence unique within a particular network. 
 IRC networks comprise of several channels which form meeting and discussion avenues. Since channels are so critical to IRC functioning, it is imperative that these channels be unique and consistent throughout the network. An IRC operator works as an admin to override actions of remove users from network. 
 \subsubsection{Web-chat}
-A web chat system uses a browser as a user interface and HTTP as underlying application protocol. Typically, a web chat service has a login system to authenticate users and a session id to maintain consistency and ensure that each user gets the chat message broadcasted.
+A web communication tool uses a browser as a user interface and HTTP as underlying application protocol. Typically, a web chat service has a login system to authenticate users and a session id to maintain consistency and ensure that each user gets the chat message broadcasted.
 \subsection{Distributed Chat System}
 \subsection{Design}
-In our chat system we use the TCP protocol for communication between the chat server and client while communication between the chat client and location server is via HTTP and TCP. TCP is a connection oriented reliable protocol and states related to each TCP connection need to be maintained at both client and server side. UDP could be used for transfer of chat messages, however we choose TCP over UDP due to TCP's reliability and the fact that packet loss may occur. 
+In our communication tool we use the TCP protocol for communication between the chat server and client while communication between the chat client and location server is via HTTP and TCP. TCP is a connection oriented reliable protocol and states related to each TCP connection need to be maintained at both client and server side. UDP could be used for transfer of chat messages, however we choose TCP over UDP due to TCP's reliability and the fact that packet loss may occur. 
 The chat application is to be implemented using a client–server architecture:
 \begin{enumerate}
 \item Clients connect to a chat server who in turn is responsible for broadcasting these messages.
@@ -180,9 +177,14 @@ To evaluate the consistency strength of the system, we simply calculated the has
 \label{fig:consistency}
 \end{figure}
 \subsection{Overloading the Web Server and Evaluation of Stress Test}
-
+In order to evaluate loading balancing and availability, Apache's JMeter was utilized.JMeter is a well tested tool to load test functional behavior and measure performance\cite{apache}. Load was tested under the original setup of 4 instances with 10, 100 and 500 users. The 3 experiments were repeated for set of 3, 2 and 1 instance. A linear increase in number of users versus latency was observed. The latency also linearly decreased with an increase in number of instances 
+\begin{figure}[H]
+  \centering
+      \includegraphics[scale=0.45]{Images/median_latency.png}
+  \caption{\textbf{Median latency (ms) increases with increase in number of users and decrease in number of available instances} }
+\label{fig:consistency}
+\end{figure}
 \section{Discussion}
-Note -  We should include some more discussion, but the following part should be there 
 Apart from the scripts that we wrote for implementing the distributed environment, we wrote a couple of simple scripts for source control and updating source files in all the three instances. We used \emph{Github} \cite{github} to store our source codes and the scripts inside each \emph{EC2} instance periodically checks the {Github} repository and updates the necessary source files in the web server. Of course this can also be manually triggered if necessary.
 
 \section{Limitation \& Future Work}
