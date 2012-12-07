@@ -8,7 +8,6 @@
 \hypersetup{pdfinfo={
 Title={A Distributed Message Board},
 Author={Irtiza Ahmed Akhter, Zainab Ghadiyal},
-Keywords (Distrbuted;Chat;)
 }}
 
 \title{Connect: A Distributed Message Board}
@@ -59,7 +58,9 @@ As mentioned in the previous section that we intend to develop a web based messa
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.90]{Images/figure1.PNG}
-\caption{\textbf{Work-flow: }We have set up a public domain to make the service available to the Internet users. A client request first goes to \hyperref[connect.microwebpla.net]{connect.microwebpla.net} (1), microwebpla.net points to the load balancer (2), the load balancer picks a suitable target server from the cluster and forwards the original request (3), the selected server gets back to the client with a reply and establishes a virtual communication channel (4), until the channel is closed, from this point client directly communicates with the selected server in step (3).}
+\caption{\textbf{Work-flow: }We have set up a public domain to make the service
+available to the Internet users. A client request first goes to
+Connect\cite{connect} (1), microwebpla.net points to the load balancer (2), the load balancer picks a suitable target server from the cluster and forwards the original request (3), the selected server gets back to the client with a reply and establishes a virtual communication channel (4), until the channel is closed, from this point client directly communicates with the selected server in step (3).}
 \label{fig:workflow}
 \end{figure}
 Our distributed message board application was built using several tools. Firstly we have used \emph{Amazon's Elastic Cloud Computing (EC2)} \cite{ec2} instances to accommodate the \emph{web servers} and the \emph{database} servers. We have spawned four  \emph{t1-micro EC2} \cite{t1micro} instances in two separate geographical zones (Us-east-1a , Us-east-1b) for this purpose. All the \emph{EC2} instances are of type t1-micro and have identical configuration. We opted for \emph{Ubuntu 11.14} 32 bit operating environment. Next we installed \emph{Apache Web Server} \cite{apache} to host the web pages and \emph{MySQL} \cite{mysql} as the database to accommodate our simple data structure. We used a fifth \emph{EC2} instance as a the \emph{Load Balancer} and \emph{Traffic Forwarder}. In order to make the service accessible from a domain name we have setup a public domain (\emph{connect.microwebpla.net}) and configured its DNS records to point it to the load balancer. Namely, we have added a \emph{CNAME} \cite{cname} record for the sub-domain \emph{connect.microwebpla.net} to make it an alias of the load balancer. The domain and its DNS records are managed by \emph{Name.com}. We used \emph{PHP}, basic \emph{HTML} and \emph{JQuery} \cite{jquery} to write the front end application, \emph{MySQL} and \emph{Shell Script} on the back end to implement different features of distributed system such as - load balancing, replication, fault tolerance, etc. And finally, the entire setup involved writing a number of custom configuration scripts for \emph{Apache}, \emph{MySQL} and \emph{EC2} instances. In  \textbf{Figure}~\ref{fig:workflow} we have laid out the different components of the entire system and presented the work-flow of serving a client request from a high level. In the following sections we will present several distributed aspects of our design.
@@ -194,22 +195,23 @@ measure performance\cite{apache}. Load was tested under the original setup of 4
 instances with 10, 100 and 500 users. The 3 experiments were repeated for set of
 3, 2 and 1 instance. A linear increase in number of users versus latency was
 observed. The latency also linearly decreased with an increase in number of
-instances~\ref{fig:median_latency}. Min latency(ms) was fairly consistent except in the case of 4 instances simulated with 100 users\ref{fig:min_latency}. An interesting trend was observed for max latency. We expected Max latency to increase with number of users and decrease with increase in number of instances. However, the max latency increased with an increase in number of instances. This behavior may be due to outliers. However, since we observe an overall increase in latency with increase in instances(as suggested by median and average date), we are confident that availability decreases latency. 
+instances~\ref{fig:median_latency}. Min latency(ms) was fairly consistent except
+in the case of 4 instances simulated with 100 users ~\ref{fig:min_latency}. An interesting trend was observed for max latency. We expected Max latency to increase with number of users and decrease with increase in number of instances. However, the max latency increased with an increase in number of instances. This behavior may be due to outliers. However, since we observe an overall increase in latency with increase in instances(as suggested by median and average date), we are confident that availability decreases latency. 
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.45]{Images/median_latency.PNG}
+      \includegraphics[scale=0.75]{Images/median_latency.PNG}
   \caption{\textbf{Median latency (ms) increases with increase in number of users and decrease in number of available instances} }
 \label{fig:median_latency}
 \end{figure}
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.45]{Images/min_latency.PNG}
+      \includegraphics[scale=0.75]{Images/min_latency.PNG}
   \caption{\textbf{Min latency(ms) is independent of number of instances or users. We notice an outlier case for 4 instances with 100 simulated users}}
 \label{fig:min_latency}
 \end{figure}
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.45]{Images/max_latency.PNG}
+      \includegraphics[scale=0.75]{Images/max_latency.PNG}
   \caption{\textbf{Max latency(ms) increases with an in number of instances and users } }
 \label{fig:max_latency}
 \end{figure}
@@ -228,6 +230,7 @@ In the previous sections we claimed and showed that the all the replicas in the 
 RFC 1495,” 1993.
 \bibitem{apache} \url{http://www.apache.org}
 \bibitem{ec2}  \url{http://aws.amazon.com/ec2}
+\bibitem{connect}  \url{http://connect.microwebpla.net}
 \bibitem{t1micro} \url{http://aws.amazon.com/ec2/instance-types}
 \bibitem{freetier}\url{http://aws.amazon.com/ec2/pricing}
 \bibitem{mysql} \url{http://www.mysql.com}
