@@ -1,4 +1,4 @@
-\documentclass[12pt, twocolumn]{article}
+\documentclass[12pt]{article}
 \usepackage[lmargin=2cm,rmargin=2cm,bmargin=3cm,tmargin=2cm]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
@@ -177,12 +177,24 @@ To evaluate the consistency strength of the system, we simply calculated the has
 \label{fig:consistency}
 \end{figure}
 \subsection{Overloading the Web Server and Evaluation of Stress Test}
-In order to evaluate loading balancing and availability, Apache's JMeter was utilized.JMeter is a well tested tool to load test functional behavior and measure performance\cite{apache}. Load was tested under the original setup of 4 instances with 10, 100 and 500 users. The 3 experiments were repeated for set of 3, 2 and 1 instance. A linear increase in number of users versus latency was observed. The latency also linearly decreased with an increase in number of instances 
+In order to evaluate loading balancing and availability, Apache's JMeter was utilized.JMeter is a well tested tool to load test functional behavior and measure performance\cite{apache}. Load was tested under the original setup of 4 instances with 10, 100 and 500 users. The 3 experiments were repeated for set of 3, 2 and 1 instance. A linear increase in number of users versus latency was observed. The latency also linearly decreased with an increase in number of instances\ref{fig:median_latency}. Min latency(ms) was fairly consistent except in the case of 4 instances simulated with 100 users\ref{fig:min_latency}. An interesting trend was observed for max latency. We expected Max latency to increase with number of users and decrease with increase in number of instances. However, the max latency increased with an increase in number of instances. This behavior may be due to outliers. However, since we observe an overall increase in latency with increase in instances(as suggested by median and average date), we are confident that availability decreases latency. 
 \begin{figure}[H]
   \centering
       \includegraphics[scale=0.45]{Images/median_latency.png}
   \caption{\textbf{Median latency (ms) increases with increase in number of users and decrease in number of available instances} }
-\label{fig:consistency}
+\label{fig:median_latency}
+\end{figure}
+\begin{figure}[H]
+  \centering
+      \includegraphics[scale=0.45]{Images/min_latency.png}
+  \caption{\textbf{Min latency(ms) is independent of number of instances or users. We notice an outlier case for 4 instances with 100 simulated users}}
+\label{fig:min_latency}
+\end{figure}
+\begin{figure}[H]
+  \centering
+      \includegraphics[scale=0.45]{Images/max_latency.png}
+  \caption{\textbf{Max latency(ms) increases with an in number of instances and users } }
+\label{fig:max_latency}
 \end{figure}
 \section{Discussion}
 Apart from the scripts that we wrote for implementing the distributed environment, we wrote a couple of simple scripts for source control and updating source files in all the three instances. We used \emph{Github} \cite{github} to store our source codes and the scripts inside each \emph{EC2} instance periodically checks the {Github} repository and updates the necessary source files in the web server. Of course this can also be manually triggered if necessary.
