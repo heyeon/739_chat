@@ -58,7 +58,7 @@ As mentioned in the previous section that we intend to develop a web based messa
 \subsection{Tools}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.90]{Images/figure1.png}
+\includegraphics[scale=0.90]{Images/figure1.PNG}
 \caption{\textbf{Work-flow: }We have set up a public domain to make the service available to the Internet users. A client request first goes to \hyperref[connect.microwebpla.net]{connect.microwebpla.net} (1), microwebpla.net points to the load balancer (2), the load balancer picks a suitable target server from the cluster and forwards the original request (3), the selected server gets back to the client with a reply and establishes a virtual communication channel (4), until the channel is closed, from this point client directly communicates with the selected server in step (3).}
 \label{fig:workflow}
 \end{figure}
@@ -68,7 +68,7 @@ Our distributed message board application was built using several tools. Firstly
 The goal of Replication is to some extent twofold. First we want the service to be replicated in all the back-end nodes, in other words, in any case, any of the back-end nodes should be able to serve any client request. And the second one is to replicate the stored data in as many instances as possible for higher availability. The first one in our case can be interpreted as serving the web pages and accepting \emph{MySQL} queries, which turned out be very straight forward. We simply replicated the web server with the web pages and the \emph{MySQL} tables in all the instances. This way each \emph{EC2} instance can serve the same web application to the end-users transparently. The latter is however turned out to be tricky. The blame to some extent goes to our specific selection of tool, namely \emph{MySQL}. Every web server is coupled with a \emph{MySQL} instance, however it is not strictly necessary to forward a specific database operation from a web server to the \emph{MySQL} instance it is coupled with, we will elaborate more on this in \textbf{section} \emph{\ref{lb.a.t}}. The second goal of replication is strictly tied to data availability and consistency. We wanted to design such a system, where data will be replicated almost instantly in all the database instances regardless of the location of the server that first accepts and processes the request, and thus providing eventual consistency. For that, at one point we decided to write code from the scratch to propagate the updates from one instance to the other. Then again, keeping in mind the fact that we did not want to re-invent the wheel, we researched a little bit more and found out that the latest \emph{MySQL} installation offers a model for replication \cite{mysql-replication}. We ask the reader to see \textbf{Figure}~\ref{fig:mysqlreplication} for a visual representation. 
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.80]{Images/figure6.png}
+      \includegraphics[scale=0.80]{Images/figure6.PNG}
   \caption{\textbf{MySQl Replication and Limitation:} \emph{Left: }Native MySQl Replication. Single master, multiple slaves, unidirectional write propagation model.
 \emph{Right:} Our requirement is multi master, multi slave and bi-directional model to support absolute replication, higher availability of service and strong consistency. To this date, MySQL does not have any support for this model.}
 \label{fig:mysqlreplication}
@@ -77,7 +77,7 @@ The goal of Replication is to some extent twofold. First we want the service to 
 Next we focused on how to leverage this existing replication model to ease our implementation at the same time not compromising any of the design goals. The intuitive  solution we came up with can be deemed as a \emph{ring topology}, where each node in the ring is a \emph{MySQL} instance acting both as \emph{master} and \emph{slave} (thus eliminating the distinction between these two roles). As shown in \textbf{Figure}~\ref{fig:connectreplication}, update always propagates from \emph{master} to \emph{slave} in one direction. This update propagation can be seen as influenced by \emph{Bayou's Anti Entropy} protocol, where each server talks to some other server and transfer the latest updates received by the first and unknown to the second (maintaining prefix property to have incremental write propagation). However to achieve this we had to experiment with configurations, as in the ring, each instance is a \emph{master} of its successor and \emph{slave} of its predecessor at the same time which is not supported by \emph{MySQL} natively. Again this concept is highly related to our availability goal we stated before. Each instance should be able receive update as a \emph{master}, log the update and propagate to its appropriate successor. All instances will have to be synchronized with their corresponding \emph{master} and \emph{slave} neighbors in terms of log position. 
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.8]{Images/figure2.png}
+      \includegraphics[scale=0.8]{Images/figure2.PNG}
   \caption{\textbf{Data Replication to Provide Eventual Consistency: }All the servers are connected to each other forming a daisy chain model. Data flows unidirectionally from one \emph{master} to its single \emph{slave}. }
 \label{fig:connectreplication}
 \end{figure}
@@ -85,7 +85,7 @@ To keep the description succinct we are skipping the low level technical details
 \subsection{Automated Failure Detection \& Self Healing}\label{fault}
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.8]{Images/figure4.png}
+      \includegraphics[scale=0.8]{Images/figure4.PNG}
   \caption{\textbf{Automated Fail Stop Fault Detection:} In case of a server failure the ring topology is broken and two neighbor servers (master and slave) are affected. We detect this failure dynamically.}
 \label{fig:failuredetection}
 \end{figure}
@@ -93,7 +93,7 @@ It can be easily seen from \textbf{Figure }~\ref{fig:connectreplication} that, i
 For failure detection we implemented a \emph{Gossip} type protocol where each instance in the chain keeps track of its \emph{master} instance. It collects two types of heartbeats, it periodically probes the \emph{MySQL} service that covers the third failure scenario and secondly it also probes the web server installed on the \emph{EC2} instance which detects the first two failure scenarios. As mentioned earlier in this report, failure detection and recovery are done by custom \emph{shell scripts}. Every instance runs a failure detection script that monitors these heartbeats. In case of any missing heartbeat, each instance dynamically repositions (recovery) itself to the proper location and completing the chain (\textbf{Figure }~\ref{fig:failurerecovery}). It is worth mentioning that, this recovery takes less than a couple of seconds without interrupting any availability and raising any inconsistent situation. This failure recovery module is also written in shell script, which knows the address of all other instances and their positions. Namely, each instance can go back ward and select a different master when the original master has failed.  On the failed server, the same script detaches the entire instance from the cluster in case of a missing \emph{MySQL} heartbeat. The other two failure cases (web server and the \emph{EC2} instance itself) are handled by the load balancer (see \textbf{Section} \ref{lb.a.t} ).
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.8]{Images/figure5.png}
+      \includegraphics[scale=0.8]{Images/figure5.PNG}
   \caption{\textbf{Automated Fail Stop Fault Recovery:} In case of a server failure the ring topology is broken and two neighbor servers (master and slave) are affected. The recovery script simply bridges the newly created gap between these two endpoints.}
 \label{fig:failurerecovery}
 \end{figure}
@@ -111,13 +111,24 @@ Once the original server is active and functional again, it will re-attach it se
 Next we talk about scalability of the design. Once we designed the dynamic fault detection and recovery, we saw that it inherently supports scalability with minimum effort. The scenario is depicted in \textbf{Figure }~\ref{fig:scalability}. When a new server is brought up on line, the gliding in process showed in \textbf{Figure }~\ref{fig:scalability} is exactly same when a failed server comes back on line and relocate it self to the appropriate position in the ring. Therefore the system can support addition of arbitrary number of servers with minimum intervention except the following two. The new server will need a complete list of available server's IP addresses and location information. As of now this list will have to be manually embedded inside the new server's recovery script and we consider this as a bootstrap requirement. The second important requirement is that, the new server must have the right permission to access the existing instances.
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.8]{Images/figure3.png}
+      \includegraphics[scale=0.8]{Images/figure3.PNG}
   \caption{\textbf{Scalability:} When a new server is added to the cluster, the bootstrap script (a.k.a recovery script) automatically finds a suitable location for the new server to glide in. We try to keep the servers from the same zone in close proximity. The bootstrap script then automatically reconfigures the cluster to complete the ring topology }
 \label{fig:scalability}
 \end{figure}
 
 \subsection{Load balancing, Availability and Transparency}\label{lb.a.t}
-We have used amazon's default load balancing service provided as part of the \emph{EC2} services, which is also an \emph{EC2} instance with minimum re-configuration to implement our design. We refer to \textbf{Figure }~\ref{fig:workflow} to point out the position of the load balancer in the overall layout. The load balancer considers the system load in individual instance, its geographic location (in \emph{EC2} terms) and the client's geographical location to forward a specific request to a specific instance in the cluster. Besides, it abstracts out the entire back-end and makes it absolutely transparent to the end-user. It also maintains the membership of each instance in the cluster. Every transaction aimed for the cluster internally or from client goes through the Load Balancer. For example, as we mentioned in \textbf{Section } \ref{fault} that we isolate an instance from the end-user in the face of any type of failure. We achieve this by manipulating the load balancer's configuration. Apart from our own monitoring module, the load balancer constantly monitors the concerned ports (3306, 80 and 22) and excludes an instance if it fails to receive a heartbeat from any of these ports, this makes the faulty instance unreachable from any client or even from within the cluster (unless accessed using explicit IP address). In addition to the load balancer we have an external domain name service that adds another layer of abstraction to the design and can be configured to point to a different cluster during system maintenance or catastrophic failure. However, updates in DNS records propagates asynchronously through the Internet, and hence it may take up to 6 hours (based on our experience) for the new information to be propagated all the root DNS servers.
+We have used amazon's default load balancing service provided as part of the
+\emph{EC2} services, which is also an \emph{EC2} instance with minimum
+re-configuration to implement our design. We refer to \textbf{Figure
+}~\ref{fig:workflow} to point out the position of the load balancer in the
+overall layout. The load balancer considers the system load in individual
+instance, its geographic location (in \emph{EC2} terms) and the client's
+geographical location to forward a specific request to a specific instance in
+the cluster. Besides, it abstracts out the entire back-end and makes it
+absolutely transparent to the end-user. It also maintains the membership of each
+instance in the cluster. Every transaction aimed for the cluster internally or
+from client goes through the Load Balancer. For example, as we mentioned in
+\textbf{Section }~\ref{fault} that we isolate an instance from the end-user in the face of any type of failure. We achieve this by manipulating the load balancer's configuration. Apart from our own monitoring module, the load balancer constantly monitors the concerned ports (3306, 80 and 22) and excludes an instance if it fails to receive a heartbeat from any of these ports, this makes the faulty instance unreachable from any client or even from within the cluster (unless accessed using explicit IP address). In addition to the load balancer we have an external domain name service that adds another layer of abstraction to the design and can be configured to point to a different cluster during system maintenance or catastrophic failure. However, updates in DNS records propagates asynchronously through the Internet, and hence it may take up to 6 hours (based on our experience) for the new information to be propagated all the root DNS servers.
 
 \section{Evaluation Of the Design \& Results}
 We have conducted a number of tests to evaluate our system's performance and its features like consistency, replication strength, scalability, load distribution and capacity in terms of concurrent connections and queries. We only included three replicas in the chain purposely due to the limitation imposed by \emph{EC2} \cite{freetier} on I/O and data transfer. During this course we have written several \emph{shell} and \emph{MySQL} scripts to automate load generation, simulation and data collection. The load configuration was different for the different tests. We wrote a \emph{shell} script that uses \emph{mysqlslap} \cite{mysqlslap}, a tool that comes with the \emph{MySQL} release to generate concurrent queries on specified hosts with custom specification and schema. All the data presented in the following subsections are real time and collected from the live system under controlled environment.
@@ -125,14 +136,14 @@ We have conducted a number of tests to evaluate our system's performance and its
 In this section we first present the limitation of a single \emph{MySQL} instance in terms of concurrent writes it can accept and server under a specific hardware and system configuration. We then present the improvement achieved by replacing a single instance with a cluster of three instances. For this part of the simulation we varied the number of concurrent clients from 50 to 350, each submitting a single query 100 times. And then we plot average, minimum and maximum query completion time for each test set, however to evaluate performance we consider the average one as it reflects a reasonable negotiation of the both measures. In the first part of the test we submitted the aforementioned workload to a single \emph{MySQL} instance and collect these metrics. We spawned a fresh instance for this purpose and directed the simulated load to that. In \textbf{Figure }~\ref{fig:singlereplica} we can see the performance of a single replica under varied workload. For exactly \emph{15000} queries the average response time was about \emph{23.43} seconds.
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.45]{Images/graph_singlereplica.png}
+      \includegraphics[scale=0.45]{Images/graph_singlereplica.PNG}
   \caption{\textbf{Performance of a single MySQL instance:} This graph plots the average, minimum and maximum query completion time against different test sets involving varied number of concurrent queries. }
 \label{fig:singlereplica}
 \end{figure}
 Next, we submit a similar workload to a cluster of three replicas and report the results in \textbf{Figure }~\ref{fig:scaling}. We notice the significant improvement in performance in terms of latency to serve each query. For exactly \emph{35000} queries the average response time was about \emph{2.6} seconds. This indeed is a non-trivial improvement.
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.45]{Images/graph_scaling.png}
+      \includegraphics[scale=0.45]{Images/graph_scaling.PNG}
   \caption{\textbf{Performance of a cluster of MySQL instances:} This graph plots the same metrics for a similar workload against total number of queries submitted to a cluster of three \emph{MySQL} instances }
 \label{fig:scaling}
 \end{figure}
@@ -142,13 +153,13 @@ Next we consider the performance of the load balancer. In other words we wanted 
 \begin{multicols}{2}
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.35]{Images/graph_lb_conns.png}
+      \includegraphics[scale=0.35]{Images/graph_lb_conns.PNG}
   \caption{\textbf{Connection Distribution}  }
 \label{fig:lb_conns}
 \end{figure}
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.35]{Images/graph_lb_queries.png}
+      \includegraphics[scale=0.35]{Images/graph_lb_queries.PNG}
   \caption{\textbf{Number of Queries Served by Each Instance} }
 \label{fig:lb_queries}
 \end{figure}
@@ -157,13 +168,13 @@ Next we consider the performance of the load balancer. In other words we wanted 
 \begin{multicols}{2}
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.35]{Images/graph_bytes_sent.png}
+      \includegraphics[scale=0.35]{Images/graph_bytes_sent.PNG}
   \caption{\textbf{Outgoing Traffic} }
 \label{fig:lb_bytes_sent}
 \end{figure}
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.35]{Images/graph_bytes_recv.png}
+      \includegraphics[scale=0.35]{Images/graph_bytes_recv.PNG}
   \caption{\textbf{Incoming Traffic} }
 \label{fig:lb_bytes_recv}
 \end{figure}
@@ -172,27 +183,33 @@ Next we consider the performance of the load balancer. In other words we wanted 
 To evaluate the consistency strength of the system, we simply calculated the hash of each \textbf{MySQL} instance and compared with others in real time under extreme load, distributed among the members in the cluster. This can be seen as taking a snapshot of all the tables and performing a comparison of those snapshots. To do this we used a third party tool \emph{mk-table-checksum} \cite{mk-table}, a part of \emph{maatkit} \cite{maatkit} package. This program simply helps one to calculate checksum of specific database in a specified host. The load configuration for this test was, \emph{250} simulated concurrent clients from each \emph{EC2} instance submitting a single query \emph{100} times. And we simultaneously generated similar load from all the the \emph{EC2} instances. So the total number of concurrent queries submitted to three \emph{MySQL} cluster was \emph{(250 x 100 x 1) x 3} = 75000. A separate script on a remote machine calculated the checksum of these three replicas every \emph{2} seconds while the queries were being served by the cluster and reported the checksums. In \textbf{Figure }~\ref{fig:consistency}, we report the outcome of this test. We can see from this graph that, the three checksums are not far away from each other and most of the time they are equal. And eventually after a certain period they reach to a consistent state. This lag period varies and depends on the transmission delay between any two instances, and in our case it was less 10 seconds under significant work load. This proves our claim of eventual consistency provided by the cluster.
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.45]{Images/graph_consistency.png}
+      \includegraphics[scale=0.45]{Images/graph_consistency.PNG}
   \caption{\textbf{Checksum Of Each MySQL Instance Against Time During Simulation} }
 \label{fig:consistency}
 \end{figure}
 \subsection{Overloading the Web Server and Evaluation of Stress Test}
-In order to evaluate loading balancing and availability, Apache's JMeter was utilized.JMeter is a well tested tool to load test functional behavior and measure performance\cite{apache}. Load was tested under the original setup of 4 instances with 10, 100 and 500 users. The 3 experiments were repeated for set of 3, 2 and 1 instance. A linear increase in number of users versus latency was observed. The latency also linearly decreased with an increase in number of instances\ref{fig:median_latency}. Min latency(ms) was fairly consistent except in the case of 4 instances simulated with 100 users\ref{fig:min_latency}. An interesting trend was observed for max latency. We expected Max latency to increase with number of users and decrease with increase in number of instances. However, the max latency increased with an increase in number of instances. This behavior may be due to outliers. However, since we observe an overall increase in latency with increase in instances(as suggested by median and average date), we are confident that availability decreases latency. 
+In order to evaluate loading balancing and availability, Apache's JMeter was
+utilized.JMeter is a well tested tool to load test functional behavior and
+measure performance\cite{apache}. Load was tested under the original setup of 4
+instances with 10, 100 and 500 users. The 3 experiments were repeated for set of
+3, 2 and 1 instance. A linear increase in number of users versus latency was
+observed. The latency also linearly decreased with an increase in number of
+instances~\ref{fig:median_latency}. Min latency(ms) was fairly consistent except in the case of 4 instances simulated with 100 users\ref{fig:min_latency}. An interesting trend was observed for max latency. We expected Max latency to increase with number of users and decrease with increase in number of instances. However, the max latency increased with an increase in number of instances. This behavior may be due to outliers. However, since we observe an overall increase in latency with increase in instances(as suggested by median and average date), we are confident that availability decreases latency. 
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.45]{Images/median_latency.png}
+      \includegraphics[scale=0.45]{Images/median_latency.PNG}
   \caption{\textbf{Median latency (ms) increases with increase in number of users and decrease in number of available instances} }
 \label{fig:median_latency}
 \end{figure}
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.45]{Images/min_latency.png}
+      \includegraphics[scale=0.45]{Images/min_latency.PNG}
   \caption{\textbf{Min latency(ms) is independent of number of instances or users. We notice an outlier case for 4 instances with 100 simulated users}}
 \label{fig:min_latency}
 \end{figure}
 \begin{figure}[H]
   \centering
-      \includegraphics[scale=0.45]{Images/max_latency.png}
+      \includegraphics[scale=0.45]{Images/max_latency.PNG}
   \caption{\textbf{Max latency(ms) increases with an in number of instances and users } }
 \label{fig:max_latency}
 \end{figure}
