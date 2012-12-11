@@ -21,7 +21,7 @@
 		<script src="http://connect.facebook.net/en_US/all.js"></script>
 		<script src="js/jquery-1.8.2.js"> </script>
 		<script src="js/jquery.validate.js"> </script>
-		<script src="chat_post_msg.js"></script>
+		<script src="chat_post_ajax.js"></script>
 		<script type="text/javascript">  
 			FB.init
 			({
