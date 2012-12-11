@@ -1,7 +1,7 @@
 <?php
 	function connect()
 	{
-		$server = "connect.microwebpla.net";
+		$server = "ec2-184-72-174-247.compute-1.amazonaws.com";
 		$db = "connect";
 		$user ="root";
 		$password = "root";
