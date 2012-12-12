@@ -21,13 +21,14 @@ Zainab Ghadiyal}, }}
 Distributed Systems are widely popular and increasingly
 important given the yearly increase in number of Internet users and scalable
 systems. In this paper, we describe the design, implementation and analysis of
-Connect, a distributed system built on top of Amazon's EC2 service. Web stress
-testing shows that latency is directly proportional to the number of users
+Connect, a communication tool built on top of Amazon's EC2 service by using distributed
+system principles. Web stress testing shows that latency is 
+directly proportional to the number of users
 on-line. Query completion time is linear proportional to number of queries
 running in parallel. \emph{MySQL} replication, although tedious to implement, can
 provide an effective open-source based solution to ensuring data replication
 across servers. Effective load balancing and an eventually consistent replication model 
-is implemented and verified.
+are implemented and verified.
 
 \section{Introduction} 
 \label{Introduction}
@@ -48,7 +49,7 @@ space.
 Internet Relay Chat(IRC\cite{IRC}) was a rather widely used
 communication tool. Each IRC network comprises of a spanning tree structure of
 servers who typically listen on port 6667. A user identifies himself within the
-IRC-network through a designation user name. The user name is hence unique within
+IRC-network through a designated user name. The user name is hence unique within
 a particular network.  IRC networks comprise of several channels which form
 meeting and discussion avenues. Since channels are so critical to IRC
 functioning, it is imperative that these channels be unique and consistent
@@ -61,7 +62,7 @@ application protocol. Typically, a web chat service has a login system to
 authenticate users and a session id to maintain consistency and ensure that each 
 user gets the chat message that are sent by other user(s).  
 
-\subsection{Design} 
+\subsection{Overall Design} 
 In our communication tool we use the TCP protocol for communication between the server 
 and client while communication between the client and location server is via HTTP and TCP. 
 TCP is a connection oriented reliable protocol and states related to each TCP 
@@ -153,7 +154,7 @@ since it allowed us to better test and implement system in the time frame
 provided without compromising on any distributed systems feature implemented and
 analyzed. Two geographical regions helped better study performance and load
 balancing due to geographical differences in where servers were placed. All the
-\emph{EC2} instances are of type \emph{t1-micro} and have identical configuration with.
+\emph{EC2} instances are of type \emph{t1-micro} and have identical configuration with
 \emph{Ubuntu 11.14} (32 bit) as the operating environment. Next
 we installed \emph{Apache Web Server} \cite{apache} to host the web pages and
 \emph{MySQL} \cite{mysql} as the database to accommodate our simple data
@@ -201,7 +202,7 @@ installation offers a model for replication \cite{mysql-replication}(\textbf{Fig
 write propagation model.  
 \emph{Right:}
 Our requirement is multi master, multi slave and bi-directional model to support
-absolute replication, higher availability of service and strong consistency. To
+absolute replication, higher availability of service and eventual consistency. To
 this date, MySQL does not have any support for this model.}
 \label{fig:mysqlreplication} 
 \end{figure} 
@@ -258,7 +259,7 @@ unidirectionally from a single \emph{master} to \emph{slave}.
 \label{fault}
 \begin{figure}[H] \centering \includegraphics[scale=0.8]{Images/figure4.PNG}
 \caption{\textbf{Automated Fail Stop Fault Detection:} In case of a server
-failure the ring topology is broken and two neighbor servers (master and slave)
+failure the ring topology is broken and two neighbor servers (master and slave of the failed node)
 are affected. We detect this failure dynamically.} \label{fig:failuredetection}
 \end{figure} It can be easily seen from \textbf{Figure
 }~\ref{fig:connectreplication} that, if any one of the node fails, the ring will
@@ -295,12 +296,12 @@ itself) are handled by the load balancer (see \textbf{Section} \ref{lb.a.t} ).
 \centering 
 \includegraphics[scale=0.8]{Images/figure5.PNG}
 \caption{\textbf{Automated Fail Stop Fault Recovery:} In case of a server
-failure the ring topology is broken and two neighbor servers (master and slave)
+failure the ring topology is broken and two neighbor servers (master and slave of the failed node)
 are affected. The recovery script simply bridges the newly created gap between
 these two endpoints.} 
 \label{fig:failurerecovery} 
 \end{figure} 
-At this point we would like highlight few significant gains achieved from this simple failure
+At this point we would like to highlight few significant gains achieved from this simple failure
 detection and recover model - 
 \begin{itemize} 
 \item Failure detection and recovery does not depend on the failed node(s) 
@@ -323,9 +324,8 @@ position.
 \label{scalability} 
 Once we designed the dynamic fault detection and recovery, we saw
 that it inherently supports scalability with minimum effort. The scenario is
-depicted in \textbf{Figure }~\ref{fig:scalability}. When a new server is brought
-up online, the gliding in process showed in \textbf{Figure
-}~\ref{fig:scalability} is exactly same when a failed server comes back on line
+depicted in \textbf{Figure}~\ref{fig:scalability}. When a new server is brought
+up online, the gliding in process showed in \textbf{Figure}~\ref{fig:scalability}  is exactly same when a failed server comes back on line
 and relocate it self to the appropriate position in the ring. Therefore the
 system can support addition of arbitrary number of servers with minimum
 intervention except the following two. The new server will need a complete list
@@ -350,15 +350,15 @@ script then automatically reconfigures the cluster to complete the ring topology
 \label{lb.a.t} We have
 used amazon's default load balancing service provided as part of the \emph{EC2}
 services, which is also an \emph{EC2} instance with minimum re-configuration to
-implement our design. We refer to \textbf{Figure }~\ref{fig:workflow} to point
+implement our design. We refer to \textbf{Figure}~\ref{fig:workflow} to point
 out the position of the load balancer in the overall layout. The load balancer
 considers the system load in individual instance, its geographic location (in
 \emph{EC2} terms) and the client's geographical location to forward a specific
 request to a specific instance in the cluster. Besides, it abstracts out the
 entire back-end and makes it absolutely transparent to the end-user. It also
 maintains the membership of each instance in the cluster. Every transaction
-aimed for the cluster internally or from client goes through the Load Balancer.
-For example, as we mentioned in \textbf{Section }~\ref{fault} that we isolate an
+aimed for the cluster internally or any request from client goes through the Load Balancer.
+For example, as we mentioned in \textbf{Section}~\ref{fault} that we isolate an
 instance from the end-user in the face of any type of failure. We achieve this
 by manipulating the load balancer's configuration. Apart from our own monitoring
 module, the load balancer constantly monitors the concerned ports (3306, 80 and
@@ -397,7 +397,7 @@ as it adequately reflects a reasonable negotiation of the both
 measures. In the first part of the test we submitted the aforementioned workload
 to a single \emph{MySQL} instance and collect these metrics. We spawned a fresh
 instance for this purpose and directed the simulated load to that. In
-\textbf{Figure }~\ref{fig:singlereplica} we can see the performance of a single
+\textbf{Figure}~\ref{fig:singlereplica} we can see the performance of a single
 replica under varied workload. For exactly \emph{15000} queries the average
 response time was about \emph{23.43} seconds.  
 \begin{figure}[H] 
@@ -408,7 +408,7 @@ average, minimum and maximum query completion time against different test sets
 involving varied number of concurrent queries. } \label{fig:singlereplica}
 \end{figure} 
 Next, we submit a similar workload to a cluster of three replicas
-and report the results in \textbf{Figure }~\ref{fig:scaling}. A significant improvement 
+and report the results in \textbf{Figure}~\ref{fig:scaling}. A significant improvement 
 in performance in terms of latency to serve each query is observed.
 For exactly \emph{35000} queries the average response time was about \emph{2.6}
 seconds. This indeed is a non-trivial improvement.  
@@ -424,14 +424,13 @@ submitted to a cluster of three \emph{MySQL} instances. }
 consider the performance of the load balancer. In other words we wanted to see
 how well the system distributes requests under extreme work loads. For this we
 simulated a \emph{350} concurrent clients from three \emph{EC2} instances, each
-submitting \emph{100} queries to the cluster. \textbf{Figure
-}~\ref{fig:lb_conns}, ~\ref{fig:lb_queries},~\ref{fig:lb_bytes_sent} and
+submitting \emph{100} queries to the cluster. \textbf{Figure}~\ref{fig:lb_conns}, ~\ref{fig:lb_queries},~\ref{fig:lb_bytes_sent} and
 ~\ref{fig:lb_bytes_recv} depict the live scenarios in the three \emph{MySQL}
 instances under this load. The first two show the number of concurrent queries
 and connections while the other two present a measurement of incoming and
 outgoing traffic. In all the four cases, the queries were distributed almost
 evenly across the three servers, however \emph{server3} served more number of queries
-as we tweaked the number of incoming connections in server 3 to allow more. In
+as we tweaked the number of incoming connections in \emph{server3} to allow more. In
 addition to that, we wanted to see the reaction in the cluster in the face of a
 failure. For that purpose, at approximately 130th second during simulation we
 took down \emph{server1} and we can see that the remaining load was shared across the
@@ -494,21 +493,21 @@ consistency provided by the cluster.
 \begin{figure}[H] 
 \centering
 \includegraphics[scale=0.35]{Images/graph_consistency.PNG}
-\caption{\textbf{Verifying Eventual Consistency through MySQL Instance Checksums: This 
-graph plots the checksum of MySQL instances versus time.}
+\caption{\textbf{Verifying Eventual Consistency:} This 
+graph plots the checksum of each MySQL instance versus simulation time.
 }
 \label{fig:consistency} 
 \end{figure} 
 \subsection{Overloading the Web Server and Evaluation of Stress Test} In order to 
-evaluate loading balancing and availability, Apache's JMeter was utilized. JMeter 
+evaluate load balancing and availability, Apache's JMeter was utilized. JMeter 
 is a well tested tool to load test functional behavior and measure 
 performance\cite{apache}. Load was tested under the original setup of 4 instances 
 with 10, 100 and 500 users. The 3
 experiments were repeated for set of 3, 2 and 1 instance. A linear increase in
 number of users versus latency was observed. The latency also linearly decreased
-with an increase in number of instances \textbf{Figure} ~\ref{fig:median_latency}. Min
+with an increase in number of instances \textbf{Figure}~\ref{fig:median_latency}. Min
 latency(ms) was fairly consistent except in the case of 4 instances simulated
-with 100 users \textbf{Figure} ~\ref{fig:min_latency}. An interesting trend was observed for max
+with 100 users \textbf{Figure}~\ref{fig:min_latency}. An interesting trend was observed for max
 latency. We expected max latency to increase with number of users and decrease
 with increase in number of instances. However, the max latency increased with an
 increase in number of instances. This behavior may be due to outliers. However,
@@ -519,16 +518,16 @@ decreases latency.
 \begin{multicols}{2}
 \begin{figure}[H] 
 \centering
-\includegraphics[scale=0.6]{Images/min_latency.PNG} 
-\caption{\textbf{Min Latency} This graph plots number of simulated users versus min latency(ms). 
+\includegraphics[scale=0.59]{Images/min_latency.PNG} 
+\caption{\textbf{Min Latency:} This graph plots number of simulated users versus min latency(ms). 
 Min latency is independent of number of instances or users} 
 \label{fig:min_latency}
 \end{figure} 
 
 \begin{figure}[H] 
 \centering
-\includegraphics[scale=0.64]{Images/max_latency.PNG} \caption{\textbf{Max
-latency} This graph plots number of simulated users verus max latency(ms). Min latency 
+\includegraphics[scale=0.6355555]{Images/max_latency.PNG} \caption{\textbf{Max
+latency:} This graph plots number of simulated users verus max latency(ms). Min latency 
 increases with an in number of instances and users } 
 \label{fig:max_latency} 
 \end{figure} 
@@ -538,7 +537,7 @@ increases with an in number of instances and users }
 \centering
 \includegraphics[scale=0.75]{Images/median_latency.PNG} 
 \caption{\textbf{Median
-latency} This graph plots number of users versus median latency (ms). Median latency 
+latency: } This graph plots number of users versus median latency (ms). Median latency 
 increases with increase in number of users and decrease in number of available instances} 
 \label{fig:median_latency} 
 \end{figure}
@@ -600,7 +599,7 @@ Addison-Wesley Pub Co., 2nd edition, August 1994.
 \bibitem{t1micro} \url{http://aws.amazon.com/ec2/instance-types}
 \bibitem{freetier}\url{http://aws.amazon.com/ec2/pricing} 
 \bibitem{mysql} \url{http://www.mysql.com} 
-\bibitem{jquery} \url{http://www.mysql.com}
+\bibitem{jquery} \url{http://jquery.com}
 \bibitem{cname} \url{http://en.wikipedia.org/wiki/CNAME\_record}
 \bibitem{mysql-replication} \url{http://dev.mysql.com/doc/refman/5.0/en/replication.html} 
 \bibitem{mk-table} \url{http://www.maatkit.org/doc/mk-table-checksum.html} 
