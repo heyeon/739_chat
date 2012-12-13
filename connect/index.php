@@ -21,7 +21,7 @@
 		<script src="http://connect.facebook.net/en_US/all.js"></script>
 		<script src="js/jquery-1.8.2.js"> </script>
 		<script src="js/jquery.validate.js"> </script>
-		<script src="text/javascript">
+		<script type="text/javascript">
 			var handle;
 			
 			function scrollBox()
